@@ -25,40 +25,57 @@ export default function Sidebar() {
   const initials = displayName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase();
 
   return (
-    <aside className="sidebar">
-      <div className="sidebar-brand">
-        <div className="sidebar-brand-icon">🏢</div>
-        <span className="sidebar-brand-name">JOBOOK</span>
-      </div>
+    <>
+      <aside className="sidebar">
+        <div className="sidebar-brand">
+          <div className="sidebar-brand-icon">🏢</div>
+          <span className="sidebar-brand-name">JOBOOK</span>
+        </div>
 
-      <nav className="sidebar-nav">
-        {nav.map((item) => (
-          <div key={item.path}>
-            {item.section && <div className="sidebar-label">{item.section}</div>}
-            <button
-              className={`sidebar-item ${location.pathname === item.path ? 'active' : ''}`}
-              onClick={() => navigate(item.path)}
-            >
-              <span className="sidebar-item-icon">{item.icon}</span>
-              {item.label}
-            </button>
+        <nav className="sidebar-nav">
+          {nav.map((item) => (
+            <div key={item.path}>
+              {item.section && <div className="sidebar-label">{item.section}</div>}
+              <button
+                className={`sidebar-item ${location.pathname === item.path ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
+              >
+                <span className="sidebar-item-icon">{item.icon}</span>
+                {item.label}
+              </button>
+            </div>
+          ))}
+        </nav>
+
+        <div className="sidebar-footer">
+          <div className="sidebar-user">
+            <div className="sidebar-avatar">{initials}</div>
+            <div className="sidebar-user-info">
+              <div className="sidebar-user-name">{displayName}</div>
+              <div className="sidebar-user-role">{isAdmin ? 'Administrator' : 'Member'}</div>
+            </div>
           </div>
+          <button className="sidebar-item" style={{ marginTop: 6, color: '#F87171' }} onClick={() => { logout(); navigate('/'); }}>
+            <span className="sidebar-item-icon">🚪</span>
+            Sign Out
+          </button>
+        </div>
+      </aside>
+
+      {/* Mobile Bottom Navigation Bar */}
+      <nav className="mobile-nav">
+        {nav.map(item => (
+          <button
+            key={item.path}
+            className={`mobile-nav-item ${location.pathname === item.path ? 'active' : ''}`}
+            onClick={() => navigate(item.path)}
+            style={{ background: 'transparent', border: 'none' }}
+          >
+            <span className="mobile-nav-icon">{item.icon}</span>
+            <span>{item.label.split(' ')[0]}</span>
+          </button>
         ))}
       </nav>
-
-      <div className="sidebar-footer">
-        <div className="sidebar-user">
-          <div className="sidebar-avatar">{initials}</div>
-          <div className="sidebar-user-info">
-            <div className="sidebar-user-name">{displayName}</div>
-            <div className="sidebar-user-role">{isAdmin ? 'Administrator' : 'Member'}</div>
-          </div>
-        </div>
-        <button className="sidebar-item" style={{ marginTop: 6, color: '#F87171' }} onClick={() => { logout(); navigate('/'); }}>
-          <span className="sidebar-item-icon">🚪</span>
-          Sign Out
-        </button>
-      </div>
-    </aside>
+    </>
   );
 }

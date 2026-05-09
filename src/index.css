@@ -335,14 +335,36 @@ tbody tr:last-child td { border-bottom: none; }
 .alert-success { background: #DCFCE7; color: #15803D; border: 1px solid #86EFAC; }
 
 /* ─── Responsive ─── */
+.responsive-grid { display: grid; grid-template-columns: 280px 1fr; gap: 24px; align-items: start; }
+
 @media (max-width: 900px) {
   .stats-grid { grid-template-columns: repeat(2,1fr); }
-  .sidebar { display: none; }
+  .sidebar { display: none !important; }
+  .responsive-grid { grid-template-columns: 1fr; }
+  .app-layout { padding-bottom: 70px; } /* Space for mobile nav */
 }
 @media (max-width: 600px) {
   .stats-grid { grid-template-columns: 1fr; }
   .page-body { padding: 16px; }
 }
+
+/* ─── Mobile Bottom Nav ─── */
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--clr-surface); border-top: 1px solid var(--clr-border);
+  z-index: 100; padding: 8px 16px; padding-bottom: calc(8px + env(safe-area-inset-bottom));
+  box-shadow: 0 -4px 12px rgba(0,0,0,.05);
+}
+@media (max-width: 900px) {
+  .mobile-nav { display: flex; justify-content: space-around; }
+}
+.mobile-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  color: var(--clr-text-muted); font-size: 10px; font-weight: 600;
+  padding: 6px 12px; border-radius: 8px; text-decoration: none;
+}
+.mobile-nav-item.active { color: var(--clr-primary); }
+.mobile-nav-icon { font-size: 20px; }
 
 /* ─── Admin Security Badge ─── */
 .security-badge {

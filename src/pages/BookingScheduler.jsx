@@ -192,7 +192,7 @@ export default function SchedulePage() {
           </div>
 
           {/* Main Content: Calendar + Slots */}
-          <div style={{ display: 'grid', gridTemplateColumns: '280px 1fr', gap: 24, alignItems: 'start' }}>
+          <div className="responsive-grid">
             {/* Left: Calendar */}
             <MiniCalendar selected={selectedDate} onSelect={setSelectedDate} />
 
