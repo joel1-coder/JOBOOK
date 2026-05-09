@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
+import NotificationDropdown from '../components/NotificationDropdown';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 
@@ -50,7 +51,7 @@ export default function UserDashboard() {
             <div className="page-subtitle">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
           </div>
           <div className="header-actions">
-            <div className="header-notif">🔔<span className="header-notif-dot" /></div>
+            <NotificationDropdown />
             <div className="header-avatar">{(profile?.full_name?.[0] || user?.email?.[0] || 'U').toUpperCase()}</div>
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
+import NotificationDropdown from '../components/NotificationDropdown';
 import { bookingService } from '../services/supabaseService';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
@@ -45,7 +46,7 @@ export default function AdminDashboard() {
             <div className="page-subtitle">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
           </div>
           <div className="header-actions">
-            <div className="header-notif">🔔<span className="header-notif-dot" /></div>
+            <NotificationDropdown />
             <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
               <div className="header-avatar">A</div>
               <div>

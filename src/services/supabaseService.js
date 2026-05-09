@@ -213,3 +213,32 @@ export const rulesService = {
     return { data, error };
   },
 };
+
+// ─── Notifications ───────────────────────────────────────────
+export const notificationService = {
+  getNotifications: async (userId) => {
+    const { data, error } = await supabase
+      .from('notifications')
+      .select('*')
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false })
+      .limit(20);
+    return { data, error };
+  },
+
+  markAsRead: async (id) => {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('id', id);
+    return { error };
+  },
+
+  markAllAsRead: async (userId) => {
+    const { error } = await supabase
+      .from('notifications')
+      .update({ is_read: true })
+      .eq('user_id', userId);
+    return { error };
+  },
+};
