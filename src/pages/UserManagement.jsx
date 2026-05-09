@@ -7,10 +7,22 @@ export default function UserManagement() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [roleFilter, setRoleFilter] = useState('all');
+  
+  // Modal state
+  const [showModal, setShowModal] = useState(false);
+  const [formData, setFormData] = useState({ full_name: '', email: '', password: '', department: '' });
+  const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
-    profileService.getAllUsers().then(({ data }) => { setUsers(data || []); setLoading(false); });
+    loadUsers();
   }, []);
+
+  const loadUsers = async () => {
+    setLoading(true);
+    const { data } = await profileService.getAllUsers();
+    setUsers(data || []);
+    setLoading(false);
+  };
 
   const toggleRole = async (u) => {
     const newRole = u.role === 'admin' ? 'user' : 'admin';
@@ -22,6 +34,35 @@ export default function UserManagement() {
     const newStatus = u.status === 'active' ? 'inactive' : 'active';
     await profileService.updateUserStatus(u.id, newStatus);
     setUsers(prev => prev.map(p => p.id === u.id ? { ...p, status: newStatus } : p));
+  };
+
+  const handleCreateUser = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+    const { error } = await profileService.adminCreateUser(
+      formData.email,
+      formData.password,
+      formData.full_name,
+      formData.department
+    );
+    if (error) {
+      alert('Error creating user: ' + error.message);
+    } else {
+      setShowModal(false);
+      setFormData({ full_name: '', email: '', password: '', department: '' });
+      loadUsers();
+    }
+    setFormLoading(false);
+  };
+
+  const handleDeleteUser = async (u) => {
+    if (!window.confirm(`Are you sure you want to completely delete ${u.full_name || u.email}? This cannot be undone.`)) return;
+    const { error } = await profileService.adminDeleteUser(u.id);
+    if (error) {
+      alert('Failed to delete user: ' + error.message);
+    } else {
+      setUsers(prev => prev.filter(p => p.id !== u.id));
+    }
   };
 
   const filtered = users.filter(u => {
@@ -43,7 +84,7 @@ export default function UserManagement() {
             <div className="page-title">User Management</div>
             <div className="page-subtitle">Admin Console — {users.length} registered users</div>
           </div>
-          <button className="btn btn-primary">+ Invite User</button>
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Add User</button>
         </div>
 
         <div className="page-body">
@@ -106,8 +147,9 @@ export default function UserManagement() {
                       <td><span className={`badge ${u.status === 'active' ? 'badge-success' : 'badge-muted'}`}>{u.status === 'active' ? '● Active' : '○ Inactive'}</span></td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)}>{u.role === 'admin' ? '👤 Demote' : '🛡️ Promote'}</button>
-                          <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)}>{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role">{u.role === 'admin' ? '👤 Demote' : '🛡️ Promote'}</button>
+                          <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)} title="Toggle Status">{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User">🗑️</button>
                         </div>
                       </td>
                     </tr>
@@ -123,6 +165,55 @@ export default function UserManagement() {
           </div>
         </div>
       </div>
+
+      {/* Create User Modal */}
+      {showModal && (
+        <div className="modal-overlay" onClick={() => setShowModal(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()}>
+            <div className="modal-header">
+              <h3 className="modal-title">Create New User</h3>
+              <button className="btn btn-ghost" onClick={() => setShowModal(false)}>✖</button>
+            </div>
+            
+            <form onSubmit={handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <div className="input-group">
+                <label>Full Name</label>
+                <div className="input-wrap">
+                  <input required placeholder="e.g. John Doe" value={formData.full_name} onChange={e => setFormData({ ...formData, full_name: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Email Address</label>
+                <div className="input-wrap">
+                  <input required type="email" placeholder="e.g. john@jobook.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Temporary Password</label>
+                <div className="input-wrap">
+                  <input required type="password" placeholder="At least 6 characters" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} minLength={6} />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Department</label>
+                <div className="input-wrap">
+                  <input placeholder="e.g. Engineering" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} />
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10 }}>
+                <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={formLoading}>
+                  {formLoading ? 'Creating...' : 'Create User'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

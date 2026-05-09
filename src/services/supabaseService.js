@@ -78,6 +78,23 @@ export const profileService = {
       .single();
     return { data, error };
   },
+
+  adminCreateUser: async (email, password, fullName, department) => {
+    const { data, error } = await supabase.rpc('admin_create_user', {
+      new_email: email,
+      new_password: password,
+      new_full_name: fullName,
+      new_department: department
+    });
+    return { data, error };
+  },
+
+  adminDeleteUser: async (userId) => {
+    const { error } = await supabase.rpc('admin_delete_user', {
+      target_user_id: userId
+    });
+    return { error };
+  },
 };
 
 // ─── Rooms ───────────────────────────────────────────────────
