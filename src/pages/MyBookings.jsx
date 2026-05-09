@@ -1,0 +1,117 @@
+import { useState, useEffect } from 'react';
+import Sidebar from '../components/Sidebar';
+import { useAuth } from '../context/AuthContext';
+import { bookingService } from '../services/supabaseService';
+
+export default function MyBookings() {
+  const { user } = useAuth();
+  const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all');
+  const [search, setSearch] = useState('');
+
+  useEffect(() => {
+    if (!user) return;
+    bookingService.getUserBookings(user.id).then(({ data }) => {
+      setBookings(data || []);
+      setLoading(false);
+    });
+  }, [user]);
+
+  const handleCancel = async (id) => {
+    await bookingService.updateBookingStatus(id, 'cancelled');
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'cancelled' } : b));
+  };
+
+  const filtered = bookings.filter(b => {
+    const matchStatus = filter === 'all' || b.status === filter;
+    const matchSearch = b.rooms?.name?.toLowerCase().includes(search.toLowerCase());
+    return matchStatus && matchSearch;
+  });
+
+  const statusBadge = (s) => {
+    const map = { confirmed: 'badge-success', completed: 'badge-info', cancelled: 'badge-danger', pending: 'badge-warning' };
+    return <span className={`badge ${map[s] || 'badge-muted'}`}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>;
+  };
+
+  const counts = {
+    total: bookings.length,
+    confirmed: bookings.filter(b => b.status === 'confirmed').length,
+    completed: bookings.filter(b => b.status === 'completed').length,
+    cancelled: bookings.filter(b => b.status === 'cancelled').length,
+  };
+
+  return (
+    <div className="app-layout">
+      <Sidebar />
+      <div className="main-content">
+        <div className="page-header">
+          <div>
+            <div className="page-title">My Bookings</div>
+            <div className="page-subtitle">Manage your room reservations</div>
+          </div>
+        </div>
+
+        <div className="page-body">
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
+            {[
+              { label: 'Total', value: counts.total, icon: '📋', color: '#EEF2FF' },
+              { label: 'Confirmed', value: counts.confirmed, icon: '✅', color: '#DCFCE7' },
+              { label: 'Completed', value: counts.completed, icon: '🏁', color: '#EFF6FF' },
+              { label: 'Cancelled', value: counts.cancelled, icon: '❌', color: '#FEE2E2' },
+            ].map(s => (
+              <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <div>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
+                    <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4 }}>{s.value}</div>
+                  </div>
+                  <div style={{ width: 42, height: 42, borderRadius: 10, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>{s.icon}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="toolbar">
+            <div className="search-box">
+              <span>🔍</span>
+              <input placeholder="Search bookings…" value={search} onChange={e => setSearch(e.target.value)} />
+            </div>
+            {['all', 'confirmed', 'pending', 'completed', 'cancelled'].map(f => (
+              <button key={f} className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-outline'}`} onClick={() => setFilter(f)}>
+                {f.charAt(0).toUpperCase() + f.slice(1)}
+              </button>
+            ))}
+          </div>
+
+          <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
+            {loading ? (
+              <p style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>Loading bookings…</p>
+            ) : filtered.length === 0 ? (
+              <div style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>
+                <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
+                <p>No bookings found</p>
+              </div>
+            ) : filtered.map(b => (
+              <div key={b.id} className="booking-card" style={{ borderRadius: 0, borderBottom: '1px solid var(--clr-border)', margin: 0 }}>
+                <div className="booking-thumb">{b.rooms?.emoji || '🏢'}</div>
+                <div className="booking-info">
+                  <div className="booking-name">{b.rooms?.name || 'Unknown Room'}</div>
+                  <div className="booking-meta">
+                    <span>🆔 {b.booking_ref}</span>
+                    <span>📆 {b.date}</span>
+                    <span>🕐 {b.time_slots?.label || '—'}</span>
+                  </div>
+                </div>
+                {statusBadge(b.status)}
+                {b.status === 'confirmed' && (
+                  <button className="btn btn-danger btn-sm" onClick={() => handleCancel(b.id)}>Cancel</button>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
