@@ -270,8 +270,17 @@ img { max-width: 100%; }
 @media (max-width: 900px) {
   .hamburger-btn { display: flex; }
   
-  /* Push page-header content right so it clears the hamburger button */
-  .page-header { padding-left: 64px; }
+  /* Enough left room so the hamburger never overlaps page title/words */
+  .page-header {
+    padding-left: 84px !important;
+    min-height: 60px;
+  }
+  
+  .page-title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
   
   .sidebar {
     position: fixed; left: 0; top: 0; height: 100vh; z-index: 160;
@@ -292,7 +301,6 @@ img { max-width: 100%; }
     display: block;
   }
   
-  /* Remove the old bottom-nav padding since we no longer have one */
   .main-content { padding-bottom: 0; }
 }
 
@@ -432,7 +440,8 @@ tbody tr:last-child td { border-bottom: none; }
 @media (max-width: 600px) {
   .stats-grid { grid-template-columns: 1fr; }
   .page-body { padding: 16px; }
-  .page-header { padding: 12px 16px; flex-direction: column; align-items: flex-start; gap: 12px; }
+  /* Keep left padding large enough to always clear the fixed hamburger button */
+  .page-header { padding: 12px 16px 12px 84px !important; flex-direction: column; align-items: flex-start; gap: 12px; }
   .page-header button { width: 100%; }
   .header-actions { width: 100%; }
   .card { margin-bottom: 12px; }
