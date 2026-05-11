@@ -96,20 +96,7 @@ export default function Sidebar() {
         </div>
       </aside>
 
-      {/* Mobile Bottom Navigation Bar */}
-      <nav className="mobile-nav">
-        {nav.map(item => (
-          <button
-            key={item.path}
-            className={`mobile-nav-item ${location.pathname === item.path ? 'active' : ''}`}
-            onClick={() => handleNavClick(item.path)}
-            style={{ background: 'transparent', border: 'none' }}
-          >
-            <span className="mobile-nav-icon">{item.icon}</span>
-            <span>{item.label.split(' ')[0]}</span>
-          </button>
-        ))}
-      </nav>
+
     </>
   );
 }

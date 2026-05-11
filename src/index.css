@@ -240,10 +240,11 @@ img { max-width: 100%; }
 
 /* ─── Hamburger Menu ─── */
 .hamburger-btn {
-  display: none; position: absolute; top: 16px; left: 16px; z-index: 200;
+  display: none; position: fixed; top: 14px; left: 14px; z-index: 200;
   flex-direction: column; gap: 5px; background: var(--clr-surface);
   border: 1px solid var(--clr-border); border-radius: var(--radius-sm);
   padding: 8px 10px; cursor: pointer; transition: all .2s;
+  box-shadow: var(--shadow-sm);
 }
 .hamburger-btn:hover { background: var(--clr-surface2); }
 .hamburger-icon {
@@ -266,11 +267,11 @@ img { max-width: 100%; }
   background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(2px);
 }
 
-/* ─── Mobile Sidebar ─── */
 @media (max-width: 900px) {
   .hamburger-btn { display: flex; }
   
-  .page-header { padding-left: 56px; }
+  /* Push page-header content right so it clears the hamburger button */
+  .page-header { padding-left: 64px; }
   
   .sidebar {
     position: fixed; left: 0; top: 0; height: 100vh; z-index: 160;
@@ -291,7 +292,8 @@ img { max-width: 100%; }
     display: block;
   }
   
-  .main-content { padding-bottom: 70px; }
+  /* Remove the old bottom-nav padding since we no longer have one */
+  .main-content { padding-bottom: 0; }
 }
 
 
@@ -425,7 +427,7 @@ tbody tr:last-child td { border-bottom: none; }
 @media (max-width: 900px) {
   .stats-grid { grid-template-columns: repeat(2,1fr); }
   .responsive-grid { grid-template-columns: 1fr; }
-  .app-layout { padding-bottom: 70px; } /* Space for mobile nav */
+  .app-layout { padding-bottom: 0; }
 }
 @media (max-width: 600px) {
   .stats-grid { grid-template-columns: 1fr; }
@@ -436,16 +438,8 @@ tbody tr:last-child td { border-bottom: none; }
   .card { margin-bottom: 12px; }
 }
 
-/* ─── Mobile Bottom Nav ─── */
-.mobile-nav {
-  display: none; position: fixed; bottom: 0; left: 0; right: 0;
-  background: var(--clr-surface); border-top: 1px solid var(--clr-border);
-  z-index: 100; padding: 8px 16px; padding-bottom: calc(8px + env(safe-area-inset-bottom));
-  box-shadow: 0 -4px 12px rgba(0,0,0,.05);
-}
-@media (max-width: 900px) {
-  .mobile-nav { display: flex; justify-content: space-around; }
-}
+/* Mobile bottom nav removed — hamburger drawer is used instead */
+.mobile-nav { display: none; }
 .mobile-nav-item {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
   color: var(--clr-text-muted); font-size: 10px; font-weight: 600;
@@ -480,3 +474,9 @@ tbody tr:last-child td { border-bottom: none; }
 /* scroll hidden */
 ::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-thumb { background: var(--clr-border); border-radius: 999px; }
+
+/* ─── Animations ─── */
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .35; }
+}
