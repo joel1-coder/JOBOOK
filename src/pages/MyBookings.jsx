@@ -53,18 +53,19 @@ export default function MyBookings() {
         </div>
 
         <div className="page-body">
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
+          {/* Stat cards — 4-col desktop, 2-col mobile */}
+          <div className="bookings-stats-grid" style={{ marginBottom: 24 }}>
             {[
-              { label: 'Total', value: counts.total, icon: '📋', color: '#EEF2FF' },
-              { label: 'Confirmed', value: counts.confirmed, icon: '✅', color: '#DCFCE7' },
-              { label: 'Completed', value: counts.completed, icon: '🏁', color: '#EFF6FF' },
-              { label: 'Cancelled', value: counts.cancelled, icon: '❌', color: '#FEE2E2' },
+              { label: 'Total', value: counts.total, icon: '📋', color: '#EEF2FF', accent: '#6366F1' },
+              { label: 'Confirmed', value: counts.confirmed, icon: '✅', color: '#DCFCE7', accent: '#10B981' },
+              { label: 'Completed', value: counts.completed, icon: '🏁', color: '#EFF6FF', accent: '#3B82F6' },
+              { label: 'Cancelled', value: counts.cancelled, icon: '❌', color: '#FEE2E2', accent: '#EF4444' },
             ].map(s => (
-              <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
+              <div key={s.label} className="card" style={{ padding: '16px 20px', borderTop: `3px solid ${s.accent}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
                     <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
-                    <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4 }}>{s.value}</div>
+                    <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4, color: s.accent }}>{s.value}</div>
                   </div>
                   <div style={{ width: 42, height: 42, borderRadius: 10, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>{s.icon}</div>
                 </div>
@@ -72,16 +73,19 @@ export default function MyBookings() {
             ))}
           </div>
 
-          <div className="toolbar">
-            <div className="search-box">
+          {/* Search + filter pills */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
+            <div className="search-box" style={{ maxWidth: '100%' }}>
               <span>🔍</span>
               <input placeholder="Search bookings…" value={search} onChange={e => setSearch(e.target.value)} />
             </div>
-            {['all', 'confirmed', 'pending', 'completed', 'cancelled'].map(f => (
-              <button key={f} className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-outline'}`} onClick={() => setFilter(f)}>
-                {f.charAt(0).toUpperCase() + f.slice(1)}
-              </button>
-            ))}
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {['all', 'confirmed', 'pending', 'completed', 'cancelled'].map(f => (
+                <button key={f} className={`btn btn-sm ${filter === f ? 'btn-primary' : 'btn-outline'}`} onClick={() => setFilter(f)}>
+                  {f.charAt(0).toUpperCase() + f.slice(1)}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>

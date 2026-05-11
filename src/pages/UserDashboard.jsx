@@ -46,11 +46,11 @@ export default function UserDashboard() {
       <Sidebar />
       <div className="main-content">
         <div className="page-header">
-          <div>
+          <div style={{ minWidth: 0 }}>
             <div className="page-title">Dashboard Overview</div>
             <div className="page-subtitle">{new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</div>
           </div>
-          <div className="header-actions">
+          <div className="header-actions" style={{ flexShrink: 0 }}>
             <NotificationDropdown />
             <div className="header-avatar">{(profile?.full_name?.[0] || user?.email?.[0] || 'U').toUpperCase()}</div>
           </div>
