@@ -76,7 +76,7 @@ export default function BookingRules() {
         <div className="page-body">
           {saved && <div className="alert alert-info">✅ Booking rules saved to database!</div>}
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 24 }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
             <div className="card card-lg">
               <h3 style={{ fontWeight: 700, marginBottom: 4 }}>📋 Booking Limits</h3>
               <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', marginBottom: 16 }}>Control how many bookings users can make</p>

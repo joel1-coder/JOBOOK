@@ -38,7 +38,7 @@ export default function Sidebar() {
     <>
       {/* Hamburger Button - Mobile Only */}
       <button 
-        className="hamburger-btn"
+        className={`hamburger-btn ${mobileMenuOpen ? 'active' : ''}`}
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         title={mobileMenuOpen ? 'Close menu' : 'Open menu'}
       >
