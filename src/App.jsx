@@ -1,12 +1,15 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import LoginPage from './pages/LoginPage';
 import AdminLoginPage from './pages/AdminLoginPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
 import UserDashboard from './pages/UserDashboard';
 import MyBookings from './pages/MyBookings';
 import UserProfile from './pages/UserProfile';
 import AdminDashboard from './pages/AdminDashboard';
 import ManageBookings from './pages/ManageBookings';
+import ManageRooms from './pages/ManageRooms';
 import ManageSlots from './pages/ManageSlots';
 import UserManagement from './pages/UserManagement';
 import BookingRules from './pages/BookingRules';
@@ -45,6 +48,7 @@ function AppRoutes() {
     <Routes>
       <Route path="/" element={<LoginPage />} />
       <Route path="/admin-login" element={<AdminLoginPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route path="/dashboard"   element={<PrivateRoute><UserDashboard /></PrivateRoute>} />
       <Route path="/schedule"    element={<PrivateRoute><BookingScheduler /></PrivateRoute>} />
@@ -53,6 +57,7 @@ function AppRoutes() {
 
       <Route path="/admin/dashboard" element={<PrivateRoute adminOnly><AdminDashboard /></PrivateRoute>} />
       <Route path="/admin/bookings" element={<PrivateRoute adminOnly><ManageBookings /></PrivateRoute>} />
+      <Route path="/admin/rooms" element={<PrivateRoute adminOnly><ManageRooms /></PrivateRoute>} />
       <Route path="/admin/slots" element={<PrivateRoute adminOnly><ManageSlots /></PrivateRoute>} />
       <Route path="/admin/users" element={<PrivateRoute adminOnly><UserManagement /></PrivateRoute>} />
       <Route path="/admin/rules" element={<PrivateRoute adminOnly><BookingRules /></PrivateRoute>} />
@@ -67,9 +72,11 @@ function AppRoutes() {
 export default function App() {
   return (
     <AuthProvider>
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </ThemeProvider>
     </AuthProvider>
   );
 }

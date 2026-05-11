@@ -28,6 +28,18 @@ export const authService = {
   onAuthChange: (callback) => {
     return supabase.auth.onAuthStateChange(callback);
   },
+
+  resetPassword: async (email) => {
+    const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    return { data, error };
+  },
+
+  updatePassword: async (password) => {
+    const { data, error } = await supabase.auth.updateUser({ password });
+    return { data, error };
+  },
 };
 
 // ─── Profile ─────────────────────────────────────────────────
@@ -79,14 +91,43 @@ export const profileService = {
     return { data, error };
   },
 
-  adminCreateUser: async (email, password, fullName, department) => {
-    const { data, error } = await supabase.rpc('admin_create_user', {
-      new_email: email,
-      new_password: password,
-      new_full_name: fullName,
-      new_department: department
-    });
-    return { data, error };
+  adminCreateUser: async (email, password, fullName, department, staffId) => {
+    try {
+      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+      const session = await supabase.auth.getSession();
+      const token = session.data?.session?.access_token;
+
+      const response = await fetch(
+        `${supabaseUrl}/functions/v1/create-user`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            full_name: fullName,
+            department: department || 'General',
+            staff_id: staffId,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Edge Function error:', data);
+        return { data: null, error: { message: data.error || 'Failed to create user' } };
+      }
+
+      console.log('User created successfully:', data);
+      return { data, error: null };
+    } catch (error) {
+      console.error('Error calling create-user function:', error);
+      return { data: null, error: { message: error.message } };
+    }
   },
 
   adminDeleteUser: async (userId) => {
@@ -107,6 +148,23 @@ export const roomService = {
     return { data, error };
   },
 
+  getAllRooms: async () => {
+    const { data, error } = await supabase
+      .from('rooms')
+      .select('*')
+      .order('name');
+    return { data, error };
+  },
+
+  createRoom: async (roomData) => {
+    const { data, error } = await supabase
+      .from('rooms')
+      .insert([roomData])
+      .select()
+      .single();
+    return { data, error };
+  },
+
   updateRoom: async (id, updates) => {
     const { data, error } = await supabase
       .from('rooms')
@@ -115,6 +173,14 @@ export const roomService = {
       .select()
       .single();
     return { data, error };
+  },
+
+  deleteRoom: async (id) => {
+    const { error } = await supabase
+      .from('rooms')
+      .delete()
+      .eq('id', id);
+    return { error };
   },
 };
 

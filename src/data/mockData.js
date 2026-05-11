@@ -1,20 +1,15 @@
 // Mock data store for JOBOOK
 export const mockRooms = [
-  { id: 1, name: 'Skyline Boardroom', capacity: 12, floor: '4th Floor', building: 'Alpha', type: 'Boardroom', available: true, emoji: '🏛️', desc: 'Premium boardroom with panoramic city views, AV setup & whiteboard.' },
-  { id: 2, name: 'Focus Pod 302', capacity: 4, floor: '3rd Floor', building: 'Beta', type: 'Focus Pod', available: true, emoji: '🎯', desc: 'Compact quiet pod ideal for small team sprints and calls.' },
-  { id: 3, name: 'Innovation Lab', capacity: 20, floor: '2nd Floor', building: 'Alpha', type: 'Lab', available: false, emoji: '🔬', desc: 'Large collaborative space with modular furniture and tech hubs.' },
-  { id: 4, name: 'Executive Suite A', capacity: 8, floor: '5th Floor', building: 'Gamma', type: 'Executive', available: true, emoji: '💼', desc: 'High-security executive meeting room with encrypted conferencing.' },
-  { id: 5, name: 'Open Collab Hub', capacity: 30, floor: '1st Floor', building: 'Beta', type: 'Hub', available: true, emoji: '🌐', desc: 'Open-plan collaborative hub for all-hands and workshops.' },
-  { id: 6, name: 'Think Tank 101', capacity: 6, floor: '1st Floor', building: 'Alpha', type: 'Meeting Room', available: false, emoji: '💡', desc: 'Creative brainstorming room with writable walls and bean bags.' },
+  { id: 1, name: 'VIDEO EDITING ROOM', capacity: 10, floor: 'MCA BLOCK', building: 'MCA BLOCK', type: 'Video Editing', available: true, emoji: '🎬', desc: 'Professional video editing room. Location: MCA BLOCK, near Staff Room' },
 ];
 
 export const mockBookings = [
-  { id: 'BK-0241', room: 'Skyline Boardroom', date: 'Oct 24, 2026', time: '10:00 AM – 11:30 AM', status: 'confirmed', user: 'Alex Johnson', userId: 1, emoji: '🏛️' },
-  { id: 'BK-0242', room: 'Focus Pod 302', date: 'Oct 24, 2026', time: '2:00 PM – 3:30 PM', status: 'confirmed', user: 'Alex Johnson', userId: 1, emoji: '🎯' },
-  { id: 'BK-0239', room: 'Innovation Lab', date: 'Oct 22, 2026', time: '9:00 AM – 12:00 PM', status: 'completed', user: 'Sarah Smith', userId: 2, emoji: '🔬' },
-  { id: 'BK-0238', room: 'Executive Suite A', date: 'Oct 21, 2026', time: '3:00 PM – 5:00 PM', status: 'cancelled', user: 'Mark Davis', userId: 3, emoji: '💼' },
-  { id: 'BK-0237', room: 'Open Collab Hub', date: 'Oct 20, 2026', time: '1:00 PM – 4:00 PM', status: 'confirmed', user: 'Lisa Chen', userId: 4, emoji: '🌐' },
-  { id: 'BK-0236', room: 'Think Tank 101', date: 'Oct 19, 2026', time: '11:00 AM – 12:00 PM', status: 'pending', user: 'James Wu', userId: 5, emoji: '💡' },
+  { id: 'BK-0241', room: 'VIDEO EDITING ROOM', date: 'Oct 24, 2026', time: '10:00 AM – 11:30 AM', status: 'confirmed', user: 'Alex Johnson', userId: 1, emoji: '🎬' },
+  { id: 'BK-0242', room: 'VIDEO EDITING ROOM', date: 'Oct 24, 2026', time: '2:00 PM – 3:30 PM', status: 'confirmed', user: 'Alex Johnson', userId: 1, emoji: '🎬' },
+  { id: 'BK-0239', room: 'VIDEO EDITING ROOM', date: 'Oct 22, 2026', time: '9:00 AM – 12:00 PM', status: 'completed', user: 'Sarah Smith', userId: 2, emoji: '🎬' },
+  { id: 'BK-0238', room: 'VIDEO EDITING ROOM', date: 'Oct 21, 2026', time: '3:00 PM – 5:00 PM', status: 'cancelled', user: 'Mark Davis', userId: 3, emoji: '🎬' },
+  { id: 'BK-0237', room: 'VIDEO EDITING ROOM', date: 'Oct 20, 2026', time: '1:00 PM – 4:00 PM', status: 'confirmed', user: 'Lisa Chen', userId: 4, emoji: '🎬' },
+  { id: 'BK-0236', room: 'VIDEO EDITING ROOM', date: 'Oct 19, 2026', time: '11:00 AM – 12:00 PM', status: 'pending', user: 'James Wu', userId: 5, emoji: '🎬' },
 ];
 
 export const mockUsers = [

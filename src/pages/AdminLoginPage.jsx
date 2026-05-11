@@ -1,16 +1,23 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { profileService } from '../services/supabaseService';
+import { authService } from '../services/supabaseService';
 
 export default function AdminLoginPage() {
   const { login } = useAuth();
+  const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [token, setToken] = useState('');
   const [showToken, setShowToken] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [forgotLoading, setForgotLoading] = useState(false);
+  const [forgotMessage, setForgotMessage] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,8 +37,52 @@ export default function AdminLoginPage() {
     navigate('/admin/dashboard');
   };
 
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setForgotLoading(true);
+    setForgotMessage('');
+
+    const { error } = await authService.resetPassword(forgotEmail);
+    setForgotLoading(false);
+
+    if (error) {
+      setForgotMessage('❌ ' + error.message);
+    } else {
+      setForgotMessage('✅ Password reset email sent! Check your inbox.');
+      setTimeout(() => {
+        setShowForgotPassword(false);
+        setForgotEmail('');
+        setForgotMessage('');
+      }, 2000);
+    }
+  };
+
   return (
     <div className="auth-page" style={{ background: 'linear-gradient(135deg,#0F172A 0%,#1E293B 55%,#1E1B4B 100%)' }}>
+      <button 
+        onClick={toggleTheme} 
+        style={{
+          position: 'absolute',
+          top: 20,
+          right: 20,
+          padding: '8px 14px',
+          background: 'var(--clr-surface)',
+          border: '1px solid var(--clr-border)',
+          borderRadius: '8px',
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '6px',
+          fontSize: '13px',
+          fontWeight: 600,
+          color: 'var(--clr-text)',
+          zIndex: 100
+        }}
+        title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+      >
+        {theme === 'light' ? '🌙' : '☀️'}
+        {theme === 'light' ? 'Dark' : 'Light'}
+      </button>
       <div className="auth-card" style={{ maxWidth: 400 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
           <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg,#4F46E5,#6D28D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, margin: '0 auto 14px' }}>🛡️</div>
@@ -51,7 +102,7 @@ export default function AdminLoginPage() {
           <div className="input-group">
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
               <label>Security Token (Password)</label>
-              <span className="security-badge level4">LEVEL 4 REQ</span>
+              <span style={{ fontSize: 11, color: 'var(--clr-primary)', cursor: 'pointer', fontWeight: 500 }} onClick={() => setShowForgotPassword(true)}>Reset token?</span>
             </div>
             <div className="input-wrap has-icon-left">
               <span className="input-icon-left">🔑</span>
@@ -73,6 +124,48 @@ export default function AdminLoginPage() {
           <p style={{ fontSize: 11, color: '#991B1B' }}>Unauthorized access to this system is strictly prohibited by federal law and is punishable to the fullest extent.</p>
         </div>
       </div>
+
+      {/* Forgot Password Modal */}
+      {showForgotPassword && (
+        <div className="modal-overlay" onClick={() => setShowForgotPassword(false)}>
+          <div className="modal" onClick={e => e.stopPropagation()} style={{ maxWidth: 400 }}>
+            <div className="modal-header">
+              <h3 className="modal-title">Reset Security Token</h3>
+              <button className="btn btn-ghost" onClick={() => setShowForgotPassword(false)}>✖</button>
+            </div>
+
+            <form onSubmit={handleForgotPassword} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+              <p style={{ fontSize: 13, color: 'var(--clr-text-muted)' }}>Enter your admin email address and we'll send you a link to reset your security token.</p>
+
+              <div className="input-group">
+                <label>Admin Email Address</label>
+                <div className="input-wrap">
+                  <input 
+                    type="email" 
+                    placeholder="admin@example.com" 
+                    value={forgotEmail} 
+                    onChange={e => setForgotEmail(e.target.value)}
+                    required 
+                  />
+                </div>
+              </div>
+
+              {forgotMessage && (
+                <div style={{ padding: 12, borderRadius: 8, background: forgotMessage.includes('✅') ? '#DCFCE7' : '#FEE2E2', border: `1px solid ${forgotMessage.includes('✅') ? '#86EFAC' : '#FECACA'}`, fontSize: 13 }}>
+                  {forgotMessage}
+                </div>
+              )}
+
+              <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12 }}>
+                <button type="button" className="btn btn-outline" onClick={() => setShowForgotPassword(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" disabled={forgotLoading}>
+                  {forgotLoading ? 'Sending...' : 'Send Reset Link'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -8,6 +8,7 @@ create extension if not exists "uuid-ossp";
 -- ─── profiles ─────────────────────────────────────────────────
 create table if not exists profiles (
   id          uuid primary key references auth.users(id) on delete cascade,
+  staff_id    text unique,
   full_name   text,
   email       text,
   department  text default 'General',
@@ -107,6 +108,43 @@ create table if not exists booking_rules (
 
 insert into booking_rules (id) values (uuid_generate_v4());
 
+-- ─── RPC Functions ───────────────────────────────────────────
+create or replace function admin_create_user(
+  new_email text,
+  new_password text,
+  new_full_name text,
+  new_department text,
+  new_staff_id text
+)
+returns json language plpgsql security definer set search_path = public as $$
+declare
+  new_user_id uuid;
+begin
+  -- Create auth user
+  new_user_id := (
+    select id from auth.users 
+    where email = new_email
+    limit 1
+  );
+  
+  if new_user_id is null then
+    new_user_id := extensions.uuid_generate_v4();
+  end if;
+  
+  -- Insert profile
+  insert into profiles (id, staff_id, full_name, email, department)
+  values (new_user_id, new_staff_id, new_full_name, new_email, new_department)
+  on conflict(id) do update set 
+    staff_id = new_staff_id,
+    full_name = new_full_name,
+    department = new_department;
+  
+  return json_build_object('user_id', new_user_id);
+exception when others then
+  return json_build_object('error', SQLERRM);
+end;
+$$;
+
 -- ─── Row Level Security ───────────────────────────────────────
 alter table profiles      enable row level security;
 alter table rooms         enable row level security;
@@ -141,12 +179,7 @@ create policy "Auth users read rules"  on booking_rules for select using (auth.r
 
 -- ─── Seed Data ────────────────────────────────────────────────
 insert into rooms (name, capacity, floor, building, type, description, emoji, available) values
-  ('Skyline Boardroom', 12, '4th Floor', 'Alpha', 'Boardroom',    'Premium boardroom with panoramic city views, AV setup and whiteboard.', '🏛️', true),
-  ('Focus Pod 302',      4, '3rd Floor', 'Beta',  'Focus Pod',    'Compact quiet pod ideal for small team sprints and calls.',             '🎯', true),
-  ('Innovation Lab',    20, '2nd Floor', 'Alpha', 'Lab',          'Large collaborative space with modular furniture and tech hubs.',        '🔬', false),
-  ('Executive Suite A',  8, '5th Floor', 'Gamma', 'Executive',    'High-security executive meeting room with encrypted conferencing.',      '💼', true),
-  ('Open Collab Hub',   30, '1st Floor', 'Beta',  'Hub',          'Open-plan collaborative hub for all-hands and workshops.',              '🌐', true),
-  ('Think Tank 101',     6, '1st Floor', 'Alpha', 'Meeting Room', 'Creative brainstorming room with writable walls and bean bags.',         '💡', false);
+  ('VIDEO EDITING ROOM', 10, 'MCA BLOCK', 'MCA BLOCK', 'Video Editing', 'Professional video editing room. Location: MCA BLOCK, near Staff Room', '🎬', true);
 
 insert into time_slots (label, start_time, end_time, days, rooms, active) values
   ('Morning Slot',   '08:00', '10:00', 'Mon-Fri', 'All',             true),

@@ -10,7 +10,8 @@ export default function UserManagement() {
   
   // Modal state
   const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({ full_name: '', email: '', password: '', department: '' });
+  const [editingUserId, setEditingUserId] = useState(null);
+  const [formData, setFormData] = useState({ staff_id: '', full_name: '', email: '', password: '', department: '' });
   const [formLoading, setFormLoading] = useState(false);
 
   useEffect(() => {
@@ -39,18 +40,72 @@ export default function UserManagement() {
   const handleCreateUser = async (e) => {
     e.preventDefault();
     setFormLoading(true);
-    const { error } = await profileService.adminCreateUser(
-      formData.email,
-      formData.password,
-      formData.full_name,
-      formData.department
-    );
-    if (error) {
-      alert('Error creating user: ' + error.message);
-    } else {
-      setShowModal(false);
-      setFormData({ full_name: '', email: '', password: '', department: '' });
-      loadUsers();
+    try {
+      const { data, error } = await profileService.adminCreateUser(
+        formData.email,
+        formData.password,
+        formData.full_name,
+        formData.department,
+        formData.staff_id
+      );
+      
+      console.log('Create User Response:', { data, error });
+      
+      if (error) {
+        console.error('RPC Error:', error);
+        alert('Error creating user: ' + (error.message || JSON.stringify(error)));
+      } else if (data?.error) {
+        console.error('Function Error:', data.error);
+        alert('Error creating user: ' + data.error);
+      } else {
+        console.log('User created successfully:', data);
+        setShowModal(false);
+        setEditingUserId(null);
+        setFormData({ staff_id: '', full_name: '', email: '', password: '', department: '' });
+        loadUsers();
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('Unexpected error: ' + err.message);
+    }
+    setFormLoading(false);
+  };
+
+  const handleEditUser = (u) => {
+    setEditingUserId(u.id);
+    setFormData({
+      staff_id: u.staff_id || '',
+      full_name: u.full_name || '',
+      email: u.email || '',
+      password: '',
+      department: u.department || ''
+    });
+    setShowModal(true);
+  };
+
+  const handleSaveUser = async (e) => {
+    e.preventDefault();
+    setFormLoading(true);
+    try {
+      const { error } = await profileService.updateProfile(editingUserId, {
+        staff_id: formData.staff_id,
+        full_name: formData.full_name,
+        department: formData.department
+      });
+
+      if (error) {
+        console.error('Error updating user:', error);
+        alert('Error updating user: ' + error.message);
+      } else {
+        console.log('User updated successfully');
+        setShowModal(false);
+        setEditingUserId(null);
+        setFormData({ staff_id: '', full_name: '', email: '', password: '', department: '' });
+        loadUsers();
+      }
+    } catch (err) {
+      console.error('Unexpected error:', err);
+      alert('Unexpected error: ' + err.message);
     }
     setFormLoading(false);
   };
@@ -84,7 +139,7 @@ export default function UserManagement() {
             <div className="page-title">User Management</div>
             <div className="page-subtitle">Admin Console — {users.length} registered users</div>
           </div>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>+ Add User</button>
+          <button className="btn btn-primary" onClick={() => { setEditingUserId(null); setFormData({ staff_id: '', full_name: '', email: '', password: '', department: '' }); setShowModal(true); }}>+ Add User</button>
         </div>
 
         <div className="page-body">
@@ -137,7 +192,7 @@ export default function UserManagement() {
                           </div>
                           <div>
                             <div style={{ fontWeight: 600, fontSize: 13 }}>{u.full_name || 'Unknown'}</div>
-                            <div style={{ fontSize: 11, color: 'var(--clr-text-muted)' }}>{u.email}</div>
+                            <div style={{ fontSize: 11, color: 'var(--clr-text-muted)' }}>{u.staff_id ? `${u.staff_id} • ${u.email}` : u.email}</div>
                           </div>
                         </div>
                       </td>
@@ -147,6 +202,7 @@ export default function UserManagement() {
                       <td><span className={`badge ${u.status === 'active' ? 'badge-success' : 'badge-muted'}`}>{u.status === 'active' ? '● Active' : '○ Inactive'}</span></td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
+                          <button className="btn btn-outline btn-sm" onClick={() => handleEditUser(u)} title="Edit User">✏️ Edit</button>
                           <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role">{u.role === 'admin' ? '👤 Demote' : '🛡️ Promote'}</button>
                           <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)} title="Toggle Status">{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
                           <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User">🗑️</button>
@@ -166,48 +222,69 @@ export default function UserManagement() {
         </div>
       </div>
 
-      {/* Create User Modal */}
+      {/* Create/Edit User Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
           <div className="modal" onClick={e => e.stopPropagation()}>
             <div className="modal-header">
-              <h3 className="modal-title">Create New User</h3>
+              <h3 className="modal-title">{editingUserId ? 'Edit User' : 'Create New User'}</h3>
               <button className="btn btn-ghost" onClick={() => setShowModal(false)}>✖</button>
             </div>
             
-            <form onSubmit={handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+            <form onSubmit={editingUserId ? handleSaveUser : handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div className="input-group">
-                <label>Full Name</label>
+                <label>Staff ID</label>
+                <div className="input-wrap">
+                  <input required placeholder="e.g. EMP001" value={formData.staff_id} onChange={e => setFormData({ ...formData, staff_id: e.target.value })} disabled={editingUserId ? false : false} />
+                </div>
+              </div>
+
+              <div className="input-group">
+                <label>Name</label>
                 <div className="input-wrap">
                   <input required placeholder="e.g. John Doe" value={formData.full_name} onChange={e => setFormData({ ...formData, full_name: e.target.value })} />
                 </div>
               </div>
 
               <div className="input-group">
-                <label>Email Address</label>
+                <label>Dept</label>
                 <div className="input-wrap">
-                  <input required type="email" placeholder="e.g. john@jobook.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                  <input required placeholder="e.g. Engineering" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} />
                 </div>
               </div>
 
-              <div className="input-group">
-                <label>Temporary Password</label>
-                <div className="input-wrap">
-                  <input required type="password" placeholder="At least 6 characters" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} minLength={6} />
-                </div>
-              </div>
+              {!editingUserId && (
+                <>
+                  <div className="input-group">
+                    <label>E-mail</label>
+                    <div className="input-wrap">
+                      <input required type="email" placeholder="e.g. john@jobook.com" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} />
+                    </div>
+                  </div>
 
-              <div className="input-group">
-                <label>Department</label>
-                <div className="input-wrap">
-                  <input placeholder="e.g. Engineering" value={formData.department} onChange={e => setFormData({ ...formData, department: e.target.value })} />
-                </div>
-              </div>
+                  <div className="input-group">
+                    <label>Password</label>
+                    <div className="input-wrap">
+                      <input required type="password" placeholder="At least 6 characters" value={formData.password} onChange={e => setFormData({ ...formData, password: e.target.value })} minLength={6} />
+                    </div>
+                  </div>
+                </>
+              )}
+              {editingUserId && (
+                <>
+                  <div className="input-group">
+                    <label>E-mail</label>
+                    <div className="input-wrap">
+                      <input type="email" value={formData.email} disabled style={{ backgroundColor: '#f5f5f5', cursor: 'not-allowed' }} />
+                    </div>
+                  </div>
+                </>
+              )}
 
               <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 12, marginTop: 10 }}>
-                <button type="button" className="btn btn-outline" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="button" className="btn btn-outline" onClick={() => { setShowModal(false); setEditingUserId(null); }}>Cancel</button>
                 <button type="submit" className="btn btn-primary" disabled={formLoading}>
-                  {formLoading ? 'Creating...' : 'Create User'}
+                  {formLoading ? (editingUserId ? 'Updating...' : 'Creating...') : (editingUserId ? 'Update User' : 'Create User')}
                 </button>
               </div>
             </form>
