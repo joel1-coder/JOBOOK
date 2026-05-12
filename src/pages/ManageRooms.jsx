@@ -10,7 +10,7 @@ export default function ManageRooms() {
   const [editingRoomId, setEditingRoomId] = useState(null);
   const [formData, setFormData] = useState({
     name: '', capacity: '', floor: '', building: '',
-    type: '', description: '', available: true,
+    type: '', description: '', image_url: '', available: true,
   });
   const [formLoading, setFormLoading] = useState(false);
   const [error, setError] = useState('');
@@ -27,13 +27,13 @@ export default function ManageRooms() {
 
   const handleAddRoom = () => {
     setEditingRoomId(null);
-    setFormData({ name: '', capacity: '', floor: '', building: '', type: '', description: '', available: true });
+    setFormData({ name: '', capacity: '', floor: '', building: '', type: '', description: '', image_url: '', available: true });
     setShowModal(true);
   };
 
   const handleEditRoom = (room) => {
     setEditingRoomId(room.id);
-    setFormData({ name: room.name, capacity: room.capacity, floor: room.floor, building: room.building, type: room.type, description: room.description, emoji: room.emoji, available: room.available });
+    setFormData({ name: room.name, capacity: room.capacity, floor: room.floor, building: room.building, type: room.type, description: room.description, image_url: room.image_url || '', emoji: room.emoji, available: room.available });
     setShowModal(true);
   };
 
@@ -79,10 +79,13 @@ export default function ManageRooms() {
     }
   };
 
+  const roomImage = (room) => room?.image_url || '/sjc-trichy.avif';
+
   const stats = [
-    { label: 'Total Rooms',  value: rooms.length,                          accent: '#6366F1' },
-    { label: 'Available',    value: rooms.filter(r => r.available).length,  accent: '#10B981' },
-    { label: 'Unavailable',  value: rooms.filter(r => !r.available).length, accent: '#EF4444' },
+    { label: 'All', value: rooms.length, color: 'linear-gradient(135deg,rgba(99,102,241,.24),rgba(99,102,241,.08))', accent: '#A5B4FC' },
+    { label: 'Available', value: rooms.filter(r => r.available).length, color: 'linear-gradient(135deg,rgba(16,185,129,.24),rgba(16,185,129,.08))', accent: '#6EE7B7' },
+    { label: 'Unavailable', value: rooms.filter(r => !r.available).length, color: 'linear-gradient(135deg,rgba(239,68,68,.25),rgba(239,68,68,.08))', accent: '#FCA5A5' },
+    { label: 'Capacity', value: rooms.reduce((total, r) => total + (Number(r.capacity) || 0), 0), color: 'linear-gradient(135deg,rgba(245,158,11,.26),rgba(245,158,11,.08))', accent: '#FCD34D' },
   ];
 
   return (
@@ -102,12 +105,12 @@ export default function ManageRooms() {
           {error && <div className="alert alert-danger">{error}</div>}
 
           {/* ── Stat Cards ── */}
-          <div className="rooms-stats-grid" style={{ marginBottom: 24 }}>
+          <div className="bookings-stats-grid" style={{ marginBottom: 24 }}>
             {stats.map(s => (
-              <div key={s.label} className="card" style={{ padding: '16px 20px', borderTop: `3px solid ${s.accent}` }}>
+              <div key={s.label} className="card" style={{ padding: '16px 20px', borderTop: `3px solid ${s.accent}`, background: s.color }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                   <div>
-                    <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
+                    <div style={{ fontSize: 11, fontWeight: 700, color: '#C7D2FE', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
                     <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4, color: s.accent }}>{loading ? '…' : s.value}</div>
                   </div>
                 </div>
@@ -136,7 +139,7 @@ export default function ManageRooms() {
                     <tr key={room.id}>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                          <div style={{ fontSize: 20 }}></div>
+                          <img src={roomImage(room)} alt={room.name} style={{ width: 42, height: 42, borderRadius: 8, objectFit: 'cover', flexShrink: 0 }} />
                           <div style={{ fontWeight: 600, fontSize: 13 }}>{room.name}</div>
                         </div>
                       </td>
@@ -177,8 +180,7 @@ export default function ManageRooms() {
             ) : rooms.map(room => (
               <div key={room.id} className="card" style={{ marginBottom: 12 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
-                  <div style={{ fontSize: 28, width: 44, height: 44, background: 'var(--clr-surface2)', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
-                  </div>
+                  <img src={roomImage(room)} alt={room.name} style={{ width: 56, height: 56, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
                   <div style={{ flex: 1, minWidth: 0 }}>
                     <div style={{ fontWeight: 700, fontSize: 15, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{room.name}</div>
                     <div style={{ fontSize: 12, color: 'var(--clr-text-muted)', marginTop: 2 }}>{room.type} · {room.capacity} people</div>
@@ -229,6 +231,16 @@ export default function ManageRooms() {
                   <label>Room Name *</label>
                   <div className="input-wrap">
                     <input required type="text" placeholder="e.g. Conference Room A" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} />
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '96px 1fr', gap: 14, alignItems: 'center' }}>
+                <img src={formData.image_url || '/sjc-trichy.avif'} alt="Room preview" style={{ width: 96, height: 72, borderRadius: 10, objectFit: 'cover', border: '1px solid var(--clr-border)' }} />
+                <div className="input-group">
+                  <label>Room Image URL</label>
+                  <div className="input-wrap">
+                    <input type="url" placeholder="https://example.com/room-photo.jpg" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })} />
                   </div>
                 </div>
               </div>

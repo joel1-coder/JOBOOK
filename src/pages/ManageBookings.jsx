@@ -55,6 +55,7 @@ export default function ManageBookings() {
       b.booking_ref?.toLowerCase().includes(search.toLowerCase());
     return matchStatus && matchSearch;
   });
+  const roomImage = (room) => room?.image_url || '/sjc-trichy.avif';
 
   const statusBadge = (s) => {
     const map = { confirmed: 'badge-success', completed: 'badge-info', cancelled: 'badge-danger', pending: 'badge-warning' };
@@ -115,13 +116,13 @@ export default function ManageBookings() {
           {error && <div className="alert alert-danger">{error}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
             {[
-              { label: 'All', value: bookings.length, color: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', accent: '#6366F1', key: 'all' },
-              { label: 'Confirmed', value: bookings.filter(b => b.status === 'confirmed').length, color: 'linear-gradient(135deg,#DCFCE7,#BBF7D0)', accent: '#10B981', key: 'confirmed' },
-              { label: 'Pending', value: bookings.filter(b => b.status === 'pending').length, color: 'linear-gradient(135deg,#FEF3C7,#FDE68A)', accent: '#F59E0B', key: 'pending' },
-              { label: 'Cancelled', value: bookings.filter(b => b.status === 'cancelled').length, color: 'linear-gradient(135deg,#FEE2E2,#FECACA)', accent: '#EF4444', key: 'cancelled' },
+              { label: 'All', value: bookings.length, color: 'linear-gradient(135deg,rgba(99,102,241,.24),rgba(99,102,241,.08))', accent: '#A5B4FC', key: 'all' },
+              { label: 'Confirmed', value: bookings.filter(b => b.status === 'confirmed').length, color: 'linear-gradient(135deg,rgba(16,185,129,.24),rgba(16,185,129,.08))', accent: '#6EE7B7', key: 'confirmed' },
+              { label: 'Pending', value: bookings.filter(b => b.status === 'pending').length, color: 'linear-gradient(135deg,rgba(245,158,11,.26),rgba(245,158,11,.08))', accent: '#FCD34D', key: 'pending' },
+              { label: 'Cancelled', value: bookings.filter(b => b.status === 'cancelled').length, color: 'linear-gradient(135deg,rgba(239,68,68,.25),rgba(239,68,68,.08))', accent: '#FCA5A5', key: 'cancelled' },
             ].map(s => (
               <div key={s.label} className="card" style={{ padding: '16px 20px', cursor: 'pointer', borderTop: `3px solid ${s.accent}`, background: s.color }} onClick={() => setFilter(s.key)}>
-                <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#C7D2FE', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
                 <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4 }}>{loading ? '…' : s.value}</div>
               </div>
             ))}
@@ -157,7 +158,7 @@ export default function ManageBookings() {
                       <td><code style={{ fontSize: 12, background: 'var(--clr-surface2)', padding: '2px 7px', borderRadius: 4 }}>{b.booking_ref}</code></td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontSize: 18 }}></span>
+                          <img src={roomImage(b.rooms)} alt={b.rooms?.name || 'Room'} style={{ width: 34, height: 34, borderRadius: 7, objectFit: 'cover', flexShrink: 0 }} />
                           <span style={{ fontWeight: 500 }}>{b.rooms?.name || '—'}</span>
                         </div>
                       </td>

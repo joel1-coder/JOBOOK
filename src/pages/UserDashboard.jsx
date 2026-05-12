@@ -27,7 +27,7 @@ export default function UserDashboard() {
       if (!user?.id) return;
       const { data } = await supabase
         .from('bookings')
-        .select('*, rooms(name, emoji), time_slots(label, start_time, end_time)')
+        .select('*, rooms(name, emoji, image_url), time_slots(label, start_time, end_time)')
         .eq('user_id', user.id)
         .in('status', ['pending', 'confirmed'])
         .order('date', { ascending: true })
@@ -40,6 +40,7 @@ export default function UserDashboard() {
   }, [user]);
 
   const availableCount = rooms.filter(r => r.available).length;
+  const roomImage = (room) => room?.image_url || '/sjc-trichy.avif';
 
   return (
     <div className="app-layout">
@@ -91,7 +92,7 @@ export default function UserDashboard() {
               <h3 style={{ fontWeight: 700, marginBottom: 16 }}>Active Bookings</h3>
               {bookings.map(b => (
                 <div key={b.id} className="booking-card">
-                  <img className="booking-thumb" src="/sjc-trichy.avif" alt={b.rooms?.name || 'Room'} />
+                  <img className="booking-thumb" src={roomImage(b.rooms)} alt={b.rooms?.name || 'Room'} />
                   <div className="booking-info">
                     <div className="booking-name">{b.rooms?.name}</div>
                     <div className="booking-meta">
@@ -139,12 +140,7 @@ export default function UserDashboard() {
               <div className="room-grid">
                 {rooms.map(room => (
                   <div key={room.id} className="room-card">
-                    <div className="room-img" style={{
-                      background: room.available
-                        ? 'linear-gradient(135deg,#4F46E5,#818CF8)'
-                        : 'linear-gradient(135deg,#94A3B8,#CBD5E1)'
-                    }}>
-                    </div>
+                    <img className="room-img" src={roomImage(room)} alt={room.name} />
                     <div className="room-card-body">
                       <div className="room-card-name">{room.name}</div>
                       <div className="room-card-meta">{room.capacity} · {room.floor} · {room.building}</div>

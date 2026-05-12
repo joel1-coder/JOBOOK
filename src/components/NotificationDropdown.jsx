@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { Bell, CheckCircle2, CircleAlert, Clock3 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
 import { notificationService } from '../services/supabaseService';
@@ -57,8 +58,15 @@ export default function NotificationDropdown() {
     setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
   };
 
+  const notificationIcon = (type = '') => {
+    if (type.includes('approved')) return <CheckCircle2 size={18} color="var(--clr-success)" aria-hidden="true" />;
+    if (type.includes('rejected')) return <CircleAlert size={18} color="var(--clr-danger)" aria-hidden="true" />;
+    return <Clock3 size={18} color="var(--clr-warning)" aria-hidden="true" />;
+  };
+
   return (
-    <div className="header-notif" ref={dropdownRef} onClick={() => setIsOpen(!isOpen)} style={{ position: 'relative' }}>
+    <div className="header-notif" ref={dropdownRef} onClick={() => setIsOpen(!isOpen)} style={{ position: 'relative' }} title="Notifications" aria-label="Notifications">
+      <Bell size={18} aria-hidden="true" />
       {unreadCount > 0 && <span className="header-notif-dot" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 10, fontWeight: 800, width: 16, height: 16, right: -4, top: -4 }}>{unreadCount}</span>}
 
       {isOpen && (
@@ -89,8 +97,8 @@ export default function NotificationDropdown() {
                   background: n.is_read ? 'transparent' : 'rgba(79, 70, 229, 0.04)',
                   cursor: 'pointer', transition: 'background .2s', display: 'flex', gap: 12
                 }}>
-                  <div style={{ fontSize: 20 }}>
-                    {n.type.includes('requested') ? '' : n.type.includes('approved') ? '' : n.type.includes('rejected') ? '' : ''}
+                  <div style={{ width: 22, display: 'flex', justifyContent: 'center', paddingTop: 1, flexShrink: 0 }}>
+                    {notificationIcon(n.type)}
                   </div>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: n.is_read ? 500 : 700, color: 'var(--clr-text)' }}>{n.title}</div>

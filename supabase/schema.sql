@@ -46,10 +46,13 @@ create table if not exists rooms (
   building    text,
   type        text,
   description text,
+  image_url   text,
   emoji       text default '🏢',
   available   boolean default true,
   created_at  timestamptz default now()
 );
+
+alter table rooms add column if not exists image_url text;
 
 -- ─── time_slots ───────────────────────────────────────────────
 create table if not exists time_slots (
@@ -178,8 +181,8 @@ create policy "Admins manage rules"    on booking_rules for all    using (exists
 create policy "Auth users read rules"  on booking_rules for select using (auth.role() = 'authenticated');
 
 -- ─── Seed Data ────────────────────────────────────────────────
-insert into rooms (name, capacity, floor, building, type, description, emoji, available) values
-  ('VIDEO EDITING ROOM', 10, 'MCA BLOCK', 'MCA BLOCK', 'Video Editing', 'Professional video editing room. Location: MCA BLOCK, near Staff Room', '🎬', true);
+insert into rooms (name, capacity, floor, building, type, description, image_url, emoji, available) values
+  ('VIDEO EDITING ROOM', 10, 'MCA BLOCK', 'MCA BLOCK', 'Video Editing', '/sjc-trichy.avif', '🎬', true);
 
 insert into time_slots (label, start_time, end_time, days, rooms, active) values
   ('Morning Slot',   '08:00', '10:00', 'Mon-Fri', 'All',             true),

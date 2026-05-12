@@ -40,6 +40,7 @@ export default function MyBookings() {
     completed: bookings.filter(b => b.status === 'completed').length,
     cancelled: bookings.filter(b => b.status === 'cancelled').length,
   };
+  const roomImage = (room) => room?.image_url || '/sjc-trichy.avif';
 
   return (
     <div className="app-layout">
@@ -95,7 +96,7 @@ export default function MyBookings() {
               </div>
             ) : filtered.map(b => (
               <div key={b.id} className="booking-card" style={{ borderRadius: 0, borderBottom: '1px solid var(--clr-border)', margin: 0 }}>
-                <img className="booking-thumb" src="/sjc-trichy.avif" alt={b.rooms?.name || 'Room'} />
+                <img className="booking-thumb" src={roomImage(b.rooms)} alt={b.rooms?.name || 'Room'} />
                 <div className="booking-info">
                   <div className="booking-name">{b.rooms?.name || 'Unknown Room'}</div>
                   <div className="booking-meta">

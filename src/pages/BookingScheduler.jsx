@@ -128,6 +128,7 @@ export default function SchedulePage() {
   const morningSlots   = slots.filter(s => parseInt(s.start_time) < 12);
   const afternoonSlots = slots.filter(s => parseInt(s.start_time) >= 12);
   const getStatus = (s) => reservedSlotIds.has(s.id) ? 'reserved' : 'available';
+  const roomImage = (room) => room?.image_url || '/sjc-trichy.avif';
 
   const handleConfirm = async () => {
     if (!selectedDate || !selectedSlot || !selectedRoom || !user) return;
@@ -201,7 +202,7 @@ export default function SchedulePage() {
               {/* Selected Room Info */}
               {selectedRoom && (
                 <div className="schedule-light-panel" style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 20, display: 'flex', gap: 20, alignItems: 'center' }}>
-                  <img src="/sjc-trichy.avif" alt={selectedRoom.name} style={{ width: 64, height: 64, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
+                  <img src={roomImage(selectedRoom)} alt={selectedRoom.name} style={{ width: 64, height: 64, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ marginBottom: 4 }}>
                       <span style={{ fontSize: 10, fontWeight: 700, background: '#DCFCE7', color: '#15803D', borderRadius: 999, padding: '2px 10px' }}>● AVAILABLE NOW</span>

@@ -240,7 +240,7 @@ img { max-width: 100%; }
 
 /* ─── Hamburger Menu ─── */
 .hamburger-btn {
-  display: none; position: fixed; top: 14px; left: 14px; z-index: 200;
+  display: none; position: fixed; top: 14px; left: 14px; z-index: 300;
   flex-direction: column; gap: 5px; background: var(--clr-surface);
   border: 1px solid var(--clr-border); border-radius: var(--radius-sm);
   padding: 8px 10px; cursor: pointer; transition: all .2s;
@@ -268,7 +268,11 @@ img { max-width: 100%; }
 }
 
 @media (max-width: 900px) {
-  .hamburger-btn { display: flex; }
+  .hamburger-btn {
+    display: flex;
+    top: max(14px, env(safe-area-inset-top));
+    left: max(14px, env(safe-area-inset-left));
+  }
   
   /* Enough left room so the hamburger never overlaps page title/words */
   .page-header {
@@ -309,7 +313,7 @@ img { max-width: 100%; }
 .page-header {
   background: var(--clr-surface); border-bottom: 1px solid var(--clr-border);
   padding: 16px 28px; display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 10; gap: 16px; position: relative;
+  position: sticky; top: 0; z-index: 10; gap: 16px;
 }
 .page-title { font-size: 18px; font-weight: 700; color: var(--clr-text); }
 .page-subtitle { font-size: 12px; color: var(--clr-text-muted); }
@@ -409,6 +413,7 @@ tbody tr:last-child td { border-bottom: none; }
 .room-img {
   height: 140px; background: linear-gradient(135deg,#4F46E5,#818CF8);
   display: flex; align-items: center; justify-content: center; color:#fff; font-size: 36px;
+  width: 100%; object-fit: cover;
 }
 .room-card-body { padding: 16px; }
 .room-card-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }

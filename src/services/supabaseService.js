@@ -189,7 +189,7 @@ export const bookingService = {
   getUserBookings: async (userId) => {
     const { data, error } = await supabase
       .from('bookings')
-      .select(`*, rooms(name, emoji), time_slots(label, start_time, end_time)`)
+      .select(`*, rooms(name, emoji, image_url), time_slots(label, start_time, end_time)`)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
     return { data, error };
@@ -198,7 +198,7 @@ export const bookingService = {
   getAllBookings: async () => {
     const { data, error } = await supabase
       .from('bookings')
-      .select(`*, rooms(name, emoji), profiles(full_name, email), time_slots(label, start_time, end_time)`)
+      .select(`*, rooms(name, emoji, image_url), profiles(full_name, email), time_slots(label, start_time, end_time)`)
       .order('created_at', { ascending: false });
     return { data, error };
   },
