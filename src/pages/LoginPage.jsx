@@ -88,7 +88,7 @@ export default function LoginPage() {
       </button>
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="auth-brand-icon"></div>
+          <img src="/favicon.jpg" alt="JOBOOK" className="auth-brand-icon" style={{ width: 40, height: 40, objectFit: 'contain' }} />
           <span className="auth-brand-name">JOBOOK</span>
         </div>
 

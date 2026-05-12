@@ -174,7 +174,8 @@ export default function AdminDashboard() {
               }} />
             ))}
             <div style={{ position: 'relative' }}>
-              <div style={{ fontSize: 13, fontWeight: 500, opacity: .75, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '.08em' }}>
+              <div style={{ fontSize: 13, fontWeight: 500, opacity: .75, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '.08em', display: 'flex', alignItems: 'center', gap: 8 }}>
+                <img src="/favicon.jpg" alt="JOBOOK" style={{ width: 20, height: 20, objectFit: 'contain' }} />
                 {greeting}
               </div>
               <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>

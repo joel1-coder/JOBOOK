@@ -85,7 +85,7 @@ export default function AdminLoginPage() {
       </button>
       <div className="auth-card" style={{ maxWidth: 400 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg,#4F46E5,#6D28D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, margin: '0 auto 14px' }}></div>
+          <img src="/favicon.jpg" alt="JOBOOK" style={{ width: 64, height: 64, objectFit: 'contain', margin: '0 auto 14px', display: 'block' }} />
           <h1 className="auth-title" style={{ fontSize: 22 }}>Admin Access</h1>
           <p className="auth-subtitle">Authorized personnel only. All access attempts are logged and monitored.</p>
         </div>

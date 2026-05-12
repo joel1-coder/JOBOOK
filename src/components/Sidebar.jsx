@@ -63,7 +63,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-brand">
-          <div className="sidebar-brand-icon"></div>
+          <img src="/favicon.jpg" alt="JOBOOK" style={{ width: 32, height: 32, objectFit: 'contain' }} />
           <span className="sidebar-brand-name">JOBOOK</span>
         </div>
 

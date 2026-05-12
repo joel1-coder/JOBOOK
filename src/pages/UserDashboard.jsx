@@ -63,6 +63,10 @@ export default function UserDashboard() {
           <div style={{ background: 'linear-gradient(135deg,#4F46E5,#6D28D9)', borderRadius: 'var(--radius)', padding: '28px 32px', color: '#fff', marginBottom: 24, position: 'relative', overflow: 'hidden' }}>
             <div style={{ position: 'absolute', right: -20, top: -20, width: 160, height: 160, borderRadius: '50%', background: 'rgba(255,255,255,.07)' }} />
             <div style={{ position: 'absolute', right: 60, bottom: -30, width: 100, height: 100, borderRadius: '50%', background: 'rgba(255,255,255,.05)' }} />
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
+              <img src="/favicon.jpg" alt="JOBOOK" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+              <span style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.08em', opacity: .8 }}>JOBOOK</span>
+            </div>
             <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, position: 'relative' }}>
               Welcome, {profile?.full_name?.split(' ')[0] || 'User'}!
             </h2>
