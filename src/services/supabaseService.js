@@ -187,18 +187,31 @@ export const roomService = {
 // ─── Bookings ────────────────────────────────────────────────
 export const bookingService = {
   getUserBookings: async (userId) => {
-    const { data, error } = await supabase
+    const withImages = await supabase
       .from('bookings')
       .select(`*, rooms(name, emoji, image_url), time_slots(label, start_time, end_time)`)
+      .eq('user_id', userId)
+      .order('created_at', { ascending: false });
+    if (!withImages.error) return withImages;
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`*, rooms(name, emoji), time_slots(label, start_time, end_time)`)
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
     return { data, error };
   },
 
   getAllBookings: async () => {
-    const { data, error } = await supabase
+    const withImages = await supabase
       .from('bookings')
       .select(`*, rooms(name, emoji, image_url), profiles(full_name, email), time_slots(label, start_time, end_time)`)
+      .order('created_at', { ascending: false });
+    if (!withImages.error) return withImages;
+
+    const { data, error } = await supabase
+      .from('bookings')
+      .select(`*, rooms(name, emoji), profiles(full_name, email), time_slots(label, start_time, end_time)`)
       .order('created_at', { ascending: false });
     return { data, error };
   },
@@ -219,6 +232,14 @@ export const bookingService = {
       .eq('id', id)
       .select()
       .single();
+    if (!error && data?.user_id && ['confirmed', 'cancelled'].includes(status)) {
+      await supabase.from('notifications').insert({
+        user_id: data.user_id,
+        type: status === 'confirmed' ? 'booking_approved' : 'booking_rejected',
+        title: status === 'confirmed' ? 'Booking approved' : 'Booking rejected',
+        message: `Your booking ${data.booking_ref || ''} has been ${status === 'confirmed' ? 'approved' : 'rejected'}.`,
+      });
+    }
     return { data, error };
   },
 

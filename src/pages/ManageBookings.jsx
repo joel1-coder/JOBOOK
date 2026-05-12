@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { FileSpreadsheet, Trash2 } from 'lucide-react';
+import * as XLSX from 'xlsx';
 import Sidebar from '../components/Sidebar';
 import { bookingService } from '../services/supabaseService';
 
@@ -12,7 +13,8 @@ export default function ManageBookings() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    bookingService.getAllBookings().then(({ data }) => {
+    bookingService.getAllBookings().then(({ data, error: loadError }) => {
+      if (loadError) setError('Could not load bookings: ' + loadError.message);
       setBookings(data || []);
       setLoading(false);
     });
@@ -63,38 +65,39 @@ export default function ManageBookings() {
   };
 
   const exportExcel = () => {
-    const escapeHtml = (value) => String(value ?? '-')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    try {
+      // Prepare data for export
+      const data = filtered.map(b => ({
+        'Booking ID': b.booking_ref || '-',
+        'Room': b.rooms?.name || '-',
+        'User': b.profiles?.full_name || '-',
+        'Date': b.date || '-',
+        'Slot': b.time_slots?.label || '-',
+        'Status': b.status ? b.status.charAt(0).toUpperCase() + b.status.slice(1) : '-',
+      }));
 
-    const headers = ['Booking ID', 'Room', 'User', 'Date', 'Slot', 'Status'];
-    const rows = filtered.map(b => [
-      b.booking_ref,
-      b.rooms?.name,
-      b.profiles?.full_name,
-      b.date,
-      b.time_slots?.label,
-      b.status ? b.status.charAt(0).toUpperCase() + b.status.slice(1) : '-',
-    ]);
+      // Create workbook and worksheet
+      const ws = XLSX.utils.json_to_sheet(data);
+      const wb = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(wb, ws, 'Bookings');
 
-    const table = `
-      <table>
-        <thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr></thead>
-        <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
-      </table>
-    `;
-    const workbook = `<!doctype html><html><head><meta charset="utf-8"></head><body>${table}</body></html>`;
-    const blob = new Blob([workbook], { type: 'application/vnd.ms-excel;charset=utf-8;' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `jobook-bookings-${new Date().toISOString().slice(0, 10)}.xls`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+      // Style the header row
+      ws['!cols'] = [
+        { wch: 15 }, // Booking ID
+        { wch: 20 }, // Room
+        { wch: 20 }, // User
+        { wch: 12 }, // Date
+        { wch: 15 }, // Slot
+        { wch: 12 }, // Status
+      ];
+
+      // Generate filename with current date
+      const filename = `jobook-bookings-${new Date().toISOString().slice(0, 10)}.xlsx`;
+      XLSX.writeFile(wb, filename);
+    } catch (error) {
+      console.error('Error exporting to Excel:', error);
+      alert('Failed to export Excel file. Please try again.');
+    }
   };
 
   return (
