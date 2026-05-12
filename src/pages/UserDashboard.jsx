@@ -91,7 +91,7 @@ export default function UserDashboard() {
               <h3 style={{ fontWeight: 700, marginBottom: 16 }}>Active Bookings</h3>
               {bookings.map(b => (
                 <div key={b.id} className="booking-card">
-                  <div className="booking-thumb">{b.rooms?.name || 'Room'}</div>
+                  <img className="booking-thumb" src="/sjc-trichy.avif" alt={b.rooms?.name || 'Room'} />
                   <div className="booking-info">
                     <div className="booking-name">{b.rooms?.name}</div>
                     <div className="booking-meta">
@@ -130,7 +130,6 @@ export default function UserDashboard() {
 
             {!loadingRooms && !roomError && rooms.length === 0 && (
               <div style={{ textAlign: 'center', padding: 60, color: 'var(--clr-text-muted)', background: 'var(--clr-surface)', borderRadius: 'var(--radius)', border: '1px dashed var(--clr-border)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}></div>
                 <p style={{ fontWeight: 600 }}>No rooms found</p>
                 <p style={{ fontSize: 13, marginTop: 4 }}>The admin may not have added any rooms yet.</p>
               </div>
@@ -145,7 +144,6 @@ export default function UserDashboard() {
                         ? 'linear-gradient(135deg,#4F46E5,#818CF8)'
                         : 'linear-gradient(135deg,#94A3B8,#CBD5E1)'
                     }}>
-                      <span style={{ fontSize: 48 }}></span>
                     </div>
                     <div className="room-card-body">
                       <div className="room-card-name">{room.name}</div>

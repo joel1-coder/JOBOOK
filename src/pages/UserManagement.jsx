@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import { profileService } from '../services/supabaseService';
 
@@ -170,10 +171,10 @@ export default function UserManagement() {
           {error && <div className="alert alert-danger">{error}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
             {[
-              { label: 'Total Users', value: users.length, icon: '', color: '#EEF2FF' },
-              { label: 'Active', value: users.filter(u => u.status === 'active').length, icon: '', color: '#DCFCE7' },
-              { label: 'Admins', value: users.filter(u => u.role === 'admin').length, icon: '', color: '#FEF3C7' },
-              { label: 'Inactive', value: users.filter(u => u.status === 'inactive').length, icon: '', color: '#FEE2E2' },
+              { label: 'Total Users', value: users.length },
+              { label: 'Active', value: users.filter(u => u.status === 'active').length },
+              { label: 'Admins', value: users.filter(u => u.role === 'admin').length },
+              { label: 'Inactive', value: users.filter(u => u.status === 'inactive').length },
             ].map(s => (
               <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -181,7 +182,6 @@ export default function UserManagement() {
                     <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
                     <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4 }}>{loading ? '…' : s.value}</div>
                   </div>
-                  <div style={{ width: 42, height: 42, borderRadius: 10, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>{s.icon}</div>
                 </div>
               </div>
             ))}
@@ -230,7 +230,9 @@ export default function UserManagement() {
                           <button className="btn btn-outline btn-sm" onClick={() => handleEditUser(u)} title="Edit User" disabled={updating}>Edit</button>
                           <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role" disabled={updating === u.id}>{u.role === 'admin' ? 'Demote' : 'Promote'}</button>
                           <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)} title="Toggle Status" disabled={updating === u.id}>{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
-                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User" disabled={updating === u.id}></button>
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User" aria-label="Delete User" disabled={updating === u.id}>
+                            <Trash2 size={14} aria-hidden="true" />
+                          </button>
                         </div>
                       </td>
                     </tr>

@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import { slotService } from '../services/supabaseService';
 
@@ -154,7 +155,9 @@ export default function ManageSlots() {
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
                           <button className="btn btn-outline btn-sm" onClick={() => setModal(s)} disabled={updating}>Edit</button>
-                          <button className="btn btn-danger btn-sm" onClick={() => deleteSlot(s.id)} disabled={updating === s.id}></button>
+                          <button className="btn btn-danger btn-sm" onClick={() => deleteSlot(s.id)} title="Delete Slot" aria-label="Delete Slot" disabled={updating === s.id}>
+                            <Trash2 size={14} aria-hidden="true" />
+                          </button>
                         </div>
                       </td>
                     </tr>

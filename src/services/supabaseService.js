@@ -221,6 +221,14 @@ export const bookingService = {
       .single();
     return { data, error };
   },
+
+  deleteBooking: async (id) => {
+    const { error } = await supabase
+      .from('bookings')
+      .delete()
+      .eq('id', id);
+    return { error };
+  },
 };
 
 // ─── Time Slots ──────────────────────────────────────────────

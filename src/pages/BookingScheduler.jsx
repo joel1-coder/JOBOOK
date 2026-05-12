@@ -20,7 +20,7 @@ function MiniCalendar({ selected, onSelect }) {
   const isToday = (d) => fmt(d) === today.toISOString().split('T')[0];
 
   return (
-    <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20 }}>
+    <div className="schedule-light-panel" style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20 }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
         <span style={{ fontWeight: 700, fontSize: 15 }}>
           {view.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
@@ -173,7 +173,7 @@ export default function SchedulePage() {
 
         <div className="page-body">
           {/* Room Selector */}
-          <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: '14px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
+          <div className="schedule-light-panel" style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: '14px 20px', marginBottom: 24, display: 'flex', alignItems: 'center', gap: 16, flexWrap: 'wrap' }}>
             <span style={{ fontSize: 13, fontWeight: 600, color: '#64748B', flexShrink: 0 }}>Select Room:</span>
             <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', flex: 1 }}>
               {rooms.map(r => (
@@ -200,9 +200,8 @@ export default function SchedulePage() {
             <div>
               {/* Selected Room Info */}
               {selectedRoom && (
-                <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 20, display: 'flex', gap: 20, alignItems: 'center' }}>
-                  <div style={{ width: 64, height: 64, borderRadius: 10, background: 'linear-gradient(135deg,#4F46E5,#818CF8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>
-                  </div>
+                <div className="schedule-light-panel" style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 20, display: 'flex', gap: 20, alignItems: 'center' }}>
+                  <img src="/sjc-trichy.avif" alt={selectedRoom.name} style={{ width: 64, height: 64, borderRadius: 10, objectFit: 'cover', flexShrink: 0 }} />
                   <div style={{ flex: 1 }}>
                     <div style={{ marginBottom: 4 }}>
                       <span style={{ fontSize: 10, fontWeight: 700, background: '#DCFCE7', color: '#15803D', borderRadius: 999, padding: '2px 10px' }}>● AVAILABLE NOW</span>
@@ -220,8 +219,7 @@ export default function SchedulePage() {
 
               {/* No slots message */}
               {slots.length === 0 && (
-                <div style={{ textAlign: 'center', padding: 60, background: '#fff', borderRadius: 12, border: '1px dashed #E2E8F0' }}>
-                  <div style={{ fontSize: 48, marginBottom: 12 }}></div>
+                <div className="schedule-light-panel" style={{ textAlign: 'center', padding: 60, background: '#fff', borderRadius: 12, border: '1px dashed #E2E8F0' }}>
                   <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>No time slots configured</p>
                   <p style={{ fontSize: 13, color: '#64748B' }}>The admin needs to add time slots via <strong>Manage Slots</strong> before you can book.</p>
                 </div>
@@ -229,7 +227,7 @@ export default function SchedulePage() {
 
               {/* Morning Slots (from Admin-configured slots) */}
               {morningSlots.length > 0 && (
-                <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 16 }}>
+                <div className="schedule-light-panel" style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                     <span style={{ fontSize: 16 }}></span>
                     <h3 style={{ fontWeight: 700, fontSize: 15 }}>Morning Slots</h3>
@@ -245,7 +243,7 @@ export default function SchedulePage() {
 
               {/* Afternoon Slots */}
               {afternoonSlots.length > 0 && (
-                <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20 }}>
+                <div className="schedule-light-panel" style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
                     <span style={{ fontSize: 16 }}></span>
                     <h3 style={{ fontWeight: 700, fontSize: 15 }}>Afternoon Slots</h3>
@@ -264,7 +262,7 @@ export default function SchedulePage() {
 
         {/* Sticky Confirm Bar */}
         {selectedSlot && selectedRoom && (
-          <div style={{
+          <div className="schedule-light-panel" style={{
             position: 'sticky', bottom: 0, background: '#fff',
             borderTop: '1px solid #E2E8F0', padding: '16px 28px',
             display: 'flex', alignItems: 'center', justifyContent: 'space-between',

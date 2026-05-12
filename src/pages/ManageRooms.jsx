@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import { roomService } from '../services/supabaseService';
 
@@ -79,9 +80,9 @@ export default function ManageRooms() {
   };
 
   const stats = [
-    { label: 'Total Rooms',  value: rooms.length,                          icon: '', color: '#EEF2FF', accent: '#6366F1' },
-    { label: 'Available',    value: rooms.filter(r => r.available).length,  icon: '', color: '#DCFCE7', accent: '#10B981' },
-    { label: 'Unavailable',  value: rooms.filter(r => !r.available).length, icon: '', color: '#FEE2E2', accent: '#EF4444' },
+    { label: 'Total Rooms',  value: rooms.length,                          accent: '#6366F1' },
+    { label: 'Available',    value: rooms.filter(r => r.available).length,  accent: '#10B981' },
+    { label: 'Unavailable',  value: rooms.filter(r => !r.available).length, accent: '#EF4444' },
   ];
 
   return (
@@ -109,7 +110,6 @@ export default function ManageRooms() {
                     <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
                     <div style={{ fontSize: 28, fontWeight: 800, marginTop: 4, color: s.accent }}>{loading ? '…' : s.value}</div>
                   </div>
-                  <div style={{ width: 44, height: 44, borderRadius: 10, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>{s.icon}</div>
                 </div>
               </div>
             ))}
@@ -130,7 +130,6 @@ export default function ManageRooms() {
                     <tr><td colSpan={6} style={{ textAlign: 'center', padding: 32, color: 'var(--clr-text-muted)' }}>Loading rooms…</td></tr>
                   ) : rooms.length === 0 ? (
                     <tr><td colSpan={6} style={{ textAlign: 'center', padding: 40, color: 'var(--clr-text-muted)' }}>
-                      <div style={{ fontSize: 36, marginBottom: 10 }}></div>
                       <p>No rooms yet. Add your first room.</p>
                     </td></tr>
                   ) : rooms.map(room => (
@@ -151,7 +150,9 @@ export default function ManageRooms() {
                           <button className={`btn btn-sm ${room.available ? 'btn-warning' : 'btn-success'}`} onClick={() => toggleAvailability(room)} disabled={updating === room.id}>
                             {updating === room.id ? '...' : room.available ? 'Disable' : 'Enable'}
                           </button>
-                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteRoom(room)} disabled={updating === room.id}></button>
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteRoom(room)} title="Delete Room" aria-label="Delete Room" disabled={updating === room.id}>
+                            <Trash2 size={14} aria-hidden="true" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -170,7 +171,6 @@ export default function ManageRooms() {
               </div>
             ) : rooms.length === 0 ? (
               <div style={{ textAlign: 'center', padding: 40, color: 'var(--clr-text-muted)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}></div>
                 <p style={{ fontWeight: 600 }}>No rooms yet</p>
                 <p style={{ fontSize: 13, marginTop: 4 }}>Tap "+ Add Room" to add your first room.</p>
               </div>
@@ -197,7 +197,10 @@ export default function ManageRooms() {
                   <button className={`btn btn-sm ${room.available ? 'btn-warning' : 'btn-success'}`} onClick={() => toggleAvailability(room)}>
                     {room.available ? 'Disable' : 'Enable'}
                   </button>
-                  <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteRoom(room)}>Delete</button>
+                  <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteRoom(room)}>
+                    <Trash2 size={14} aria-hidden="true" />
+                    Delete
+                  </button>
                 </div>
               </div>
             ))}

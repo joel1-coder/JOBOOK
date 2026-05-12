@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { FileSpreadsheet, Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
 import { bookingService } from '../services/supabaseService';
 
@@ -31,6 +32,21 @@ export default function ManageBookings() {
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
   };
 
+  const deleteBooking = async (booking) => {
+    if (!window.confirm(`Delete booking ${booking.booking_ref || ''}? This cannot be undone.`)) return;
+    setUpdating(booking.id);
+    setError('');
+    const { error: err } = await bookingService.deleteBooking(booking.id);
+    setUpdating(null);
+
+    if (err) {
+      setError('Failed to delete booking: ' + err.message);
+      return;
+    }
+
+    setBookings(prev => prev.filter(b => b.id !== booking.id));
+  };
+
   const filtered = bookings.filter(b => {
     const matchStatus = filter === 'all' || b.status === filter;
     const matchSearch =
@@ -45,6 +61,41 @@ export default function ManageBookings() {
     return <span className={`badge ${map[s] || 'badge-muted'}`}>{s.charAt(0).toUpperCase() + s.slice(1)}</span>;
   };
 
+  const exportExcel = () => {
+    const escapeHtml = (value) => String(value ?? '-')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+
+    const headers = ['Booking ID', 'Room', 'User', 'Date', 'Slot', 'Status'];
+    const rows = filtered.map(b => [
+      b.booking_ref,
+      b.rooms?.name,
+      b.profiles?.full_name,
+      b.date,
+      b.time_slots?.label,
+      b.status ? b.status.charAt(0).toUpperCase() + b.status.slice(1) : '-',
+    ]);
+
+    const table = `
+      <table>
+        <thead><tr>${headers.map(h => `<th>${escapeHtml(h)}</th>`).join('')}</tr></thead>
+        <tbody>${rows.map(row => `<tr>${row.map(cell => `<td>${escapeHtml(cell)}</td>`).join('')}</tr>`).join('')}</tbody>
+      </table>
+    `;
+    const workbook = `<!doctype html><html><head><meta charset="utf-8"></head><body>${table}</body></html>`;
+    const blob = new Blob([workbook], { type: 'application/vnd.ms-excel;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `jobook-bookings-${new Date().toISOString().slice(0, 10)}.xls`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="app-layout">
       <Sidebar />
@@ -54,20 +105,23 @@ export default function ManageBookings() {
             <div className="page-title">Manage Bookings</div>
             <div className="page-subtitle">Review and control all room reservations</div>
           </div>
-          <button className="btn btn-primary">+ Export CSV</button>
+          <button className="btn btn-primary" onClick={exportExcel}>
+            <FileSpreadsheet size={16} aria-hidden="true" />
+            Excel Sheet
+          </button>
         </div>
 
         <div className="page-body">
           {error && <div className="alert alert-danger">{error}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
             {[
-              { label: 'All', value: bookings.length, color: '#EEF2FF', key: 'all' },
-              { label: 'Confirmed', value: bookings.filter(b => b.status === 'confirmed').length, color: '#DCFCE7', key: 'confirmed' },
-              { label: 'Pending', value: bookings.filter(b => b.status === 'pending').length, color: '#FEF3C7', key: 'pending' },
-              { label: 'Cancelled', value: bookings.filter(b => b.status === 'cancelled').length, color: '#FEE2E2', key: 'cancelled' },
+              { label: 'All', value: bookings.length, color: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)', accent: '#6366F1', key: 'all' },
+              { label: 'Confirmed', value: bookings.filter(b => b.status === 'confirmed').length, color: 'linear-gradient(135deg,#DCFCE7,#BBF7D0)', accent: '#10B981', key: 'confirmed' },
+              { label: 'Pending', value: bookings.filter(b => b.status === 'pending').length, color: 'linear-gradient(135deg,#FEF3C7,#FDE68A)', accent: '#F59E0B', key: 'pending' },
+              { label: 'Cancelled', value: bookings.filter(b => b.status === 'cancelled').length, color: 'linear-gradient(135deg,#FEE2E2,#FECACA)', accent: '#EF4444', key: 'cancelled' },
             ].map(s => (
-              <div key={s.label} className="card" style={{ padding: '16px 20px', cursor: 'pointer' }} onClick={() => setFilter(s.key)}>
-                <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
+              <div key={s.label} className="card" style={{ padding: '16px 20px', cursor: 'pointer', borderTop: `3px solid ${s.accent}`, background: s.color }} onClick={() => setFilter(s.key)}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: '#334155', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
                 <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4 }}>{loading ? '…' : s.value}</div>
               </div>
             ))}
@@ -125,6 +179,9 @@ export default function ManageBookings() {
                           {(b.status === 'cancelled' || b.status === 'completed') && (
                             <span style={{ fontSize: 12, color: 'var(--clr-text-light)' }}>—</span>
                           )}
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => deleteBooking(b)} title="Delete Booking" aria-label="Delete Booking" disabled={updating === b.id}>
+                            <Trash2 size={14} aria-hidden="true" />
+                          </button>
                         </div>
                       </td>
                     </tr>
@@ -133,7 +190,6 @@ export default function ManageBookings() {
               </table>
               {!loading && filtered.length === 0 && (
                 <div style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}></div>
                   <p>No bookings match your filters</p>
                 </div>
               )}

@@ -56,10 +56,10 @@ export default function MyBookings() {
           {/* Stat cards — 4-col desktop, 2-col mobile */}
           <div className="bookings-stats-grid" style={{ marginBottom: 24 }}>
             {[
-              { label: 'Total', value: counts.total, icon: '', color: '#EEF2FF', accent: '#6366F1' },
-              { label: 'Confirmed', value: counts.confirmed, icon: '', color: '#DCFCE7', accent: '#10B981' },
-              { label: 'Completed', value: counts.completed, icon: '', color: '#EFF6FF', accent: '#3B82F6' },
-              { label: 'Cancelled', value: counts.cancelled, icon: '', color: '#FEE2E2', accent: '#EF4444' },
+              { label: 'Total', value: counts.total, accent: '#6366F1' },
+              { label: 'Confirmed', value: counts.confirmed, accent: '#10B981' },
+              { label: 'Completed', value: counts.completed, accent: '#3B82F6' },
+              { label: 'Cancelled', value: counts.cancelled, accent: '#EF4444' },
             ].map(s => (
               <div key={s.label} className="card" style={{ padding: '16px 20px', borderTop: `3px solid ${s.accent}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -67,7 +67,6 @@ export default function MyBookings() {
                     <div style={{ fontSize: 11, fontWeight: 600, color: 'var(--clr-text-muted)', textTransform: 'uppercase', letterSpacing: '.04em' }}>{s.label}</div>
                     <div style={{ fontSize: 26, fontWeight: 800, marginTop: 4, color: s.accent }}>{s.value}</div>
                   </div>
-                  <div style={{ width: 42, height: 42, borderRadius: 10, background: s.color, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 18 }}>{s.icon}</div>
                 </div>
               </div>
             ))}
@@ -92,12 +91,11 @@ export default function MyBookings() {
               <p style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>Loading bookings…</p>
             ) : filtered.length === 0 ? (
               <div style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}></div>
                 <p>No bookings found</p>
               </div>
             ) : filtered.map(b => (
               <div key={b.id} className="booking-card" style={{ borderRadius: 0, borderBottom: '1px solid var(--clr-border)', margin: 0 }}>
-                <div className="booking-thumb">{b.rooms?.name || 'Room'}</div>
+                <img className="booking-thumb" src="/sjc-trichy.avif" alt={b.rooms?.name || 'Room'} />
                 <div className="booking-info">
                   <div className="booking-name">{b.rooms?.name || 'Unknown Room'}</div>
                   <div className="booking-meta">
