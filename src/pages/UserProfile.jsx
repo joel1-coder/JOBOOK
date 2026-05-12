@@ -54,18 +54,18 @@ export default function UserProfile() {
             disabled={saving}
             onClick={() => editing ? handleSave() : setEditing(true)}
           >
-            {saving ? '⏳ Saving…' : editing ? '💾 Save Changes' : '✏️ Edit Profile'}
+            {saving ? 'Saving…' : editing ? 'Save Changes' : 'Edit Profile'}
           </button>
         </div>
 
         <div className="page-body">
-          {saved && <div className="alert alert-info">✅ Profile updated successfully!</div>}
+          {saved && <div className="alert alert-info">Profile updated successfully!</div>}
 
           <div className="profile-hero">
             <div className="profile-avatar-lg">{initials}</div>
             <div>
               <div className="profile-name">{form.full_name || 'User'}</div>
-              <div className="profile-role">🏢 {form.department || 'General'} · {profile?.role || 'Member'}</div>
+              <div className="profile-role">{form.department || 'General'} · {profile?.role || 'Member'}</div>
               <div style={{ display: 'flex', gap: 20, marginTop: 14 }}>
                 <div>
                   <div style={{ fontSize: 20, fontWeight: 800 }}>{profile?.role === 'admin' ? '∞' : '—'}</div>
@@ -73,7 +73,7 @@ export default function UserProfile() {
                 </div>
                 <div style={{ width: 1, background: 'rgba(255,255,255,.2)' }} />
                 <div>
-                  <div style={{ fontSize: 20, fontWeight: 800 }}>{profile?.status === 'active' ? '✅' : '⛔'}</div>
+                  <div style={{ fontSize: 20, fontWeight: 800 }}>{profile?.status === 'active' ? 'Active' : 'Inactive'}</div>
                   <div style={{ fontSize: 11, opacity: .75 }}>Status</div>
                 </div>
               </div>
@@ -82,7 +82,7 @@ export default function UserProfile() {
 
           <div className="profile-form-grid">
             <div className="card card-lg">
-              <h3 style={{ fontWeight: 700, marginBottom: 18 }}>👤 Personal Information</h3>
+              <h3 style={{ fontWeight: 700, marginBottom: 18 }}>Personal Information</h3>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
                 {[
                   { label: 'Full Name', key: 'full_name', type: 'text' },
@@ -108,7 +108,7 @@ export default function UserProfile() {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
               <div className="card card-lg">
-                <h3 style={{ fontWeight: 700, marginBottom: 14 }}>📝 Bio</h3>
+                <h3 style={{ fontWeight: 700, marginBottom: 14 }}>Bio</h3>
                 <textarea
                   rows={5} value={form.bio} disabled={!editing}
                   onChange={e => setForm({ ...form, bio: e.target.value })}
@@ -118,7 +118,7 @@ export default function UserProfile() {
               </div>
 
               <div className="card card-lg">
-                <h3 style={{ fontWeight: 700, marginBottom: 14 }}>🔒 Security</h3>
+                <h3 style={{ fontWeight: 700, marginBottom: 14 }}>Security</h3>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--clr-border)' }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 600 }}>Password</div>

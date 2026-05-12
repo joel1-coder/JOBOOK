@@ -127,7 +127,7 @@ export default function ManageSlots() {
         <div className="page-body">
           {error && <div className="alert alert-danger">{error}</div>}
           <div className="alert alert-info" style={{ marginBottom: 24 }}>
-            ℹ️ Changes take effect for new bookings only. Existing confirmed bookings are not affected.
+            Changes take effect for new bookings only. Existing confirmed bookings are not affected.
           </div>
 
           <div className="card" style={{ padding: 0, overflow: 'hidden' }}>
@@ -153,8 +153,8 @@ export default function ManageSlots() {
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => setModal(s)} disabled={updating}>✏️ Edit</button>
-                          <button className="btn btn-danger btn-sm" onClick={() => deleteSlot(s.id)} disabled={updating === s.id}>🗑️</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => setModal(s)} disabled={updating}>Edit</button>
+                          <button className="btn btn-danger btn-sm" onClick={() => deleteSlot(s.id)} disabled={updating === s.id}></button>
                         </div>
                       </td>
                     </tr>

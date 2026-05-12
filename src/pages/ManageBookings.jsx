@@ -75,7 +75,7 @@ export default function ManageBookings() {
 
           <div className="toolbar">
             <div className="search-box">
-              <span>🔍</span>
+              <span></span>
               <input placeholder="Search by room, user, or ID…" value={search} onChange={e => setSearch(e.target.value)} />
             </div>
             <select className="filter-select" value={filter} onChange={e => setFilter(e.target.value)}>
@@ -103,7 +103,7 @@ export default function ManageBookings() {
                       <td><code style={{ fontSize: 12, background: 'var(--clr-surface2)', padding: '2px 7px', borderRadius: 4 }}>{b.booking_ref}</code></td>
                       <td>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontSize: 18 }}>{b.rooms?.emoji || '🏢'}</span>
+                          <span style={{ fontSize: 18 }}></span>
                           <span style={{ fontWeight: 500 }}>{b.rooms?.name || '—'}</span>
                         </div>
                       </td>
@@ -133,7 +133,7 @@ export default function ManageBookings() {
               </table>
               {!loading && filtered.length === 0 && (
                 <div style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>📭</div>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}></div>
                   <p>No bookings match your filters</p>
                 </div>
               )}

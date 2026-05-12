@@ -81,12 +81,12 @@ export default function ResetPasswordPage() {
         }}
         title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       >
-        {theme === 'light' ? '🌙' : '☀️'}
+        {theme === 'light' ? '' : ''}
         {theme === 'light' ? 'Dark' : 'Light'}
       </button>
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="auth-brand-icon">🔐</div>
+          <div className="auth-brand-icon"></div>
           <span className="auth-brand-name">JOBOOK</span>
         </div>
 
@@ -95,7 +95,7 @@ export default function ResetPasswordPage() {
 
         {!tokenValid ? (
           <>
-            {error && <div className="alert alert-danger">⚠️ {error}</div>}
+            {error && <div className="alert alert-danger">{error}</div>}
             <div style={{ marginTop: 20, padding: 16, background: '#FEF3C7', borderRadius: 10, border: '1px solid #FBBF24', textAlign: 'center' }}>
               <p style={{ fontSize: 13, color: '#92400E' }}>
                 This password reset link is invalid or has expired.
@@ -112,12 +112,12 @@ export default function ResetPasswordPage() {
         ) : success ? (
           <div style={{ marginTop: 20, padding: 16, background: '#DCFCE7', borderRadius: 10, border: '1px solid #86EFAC', textAlign: 'center' }}>
             <p style={{ fontSize: 13, color: '#166534' }}>
-              ✅ Password reset successfully! Redirecting to login...
+              Password reset successfully! Redirecting to login...
             </p>
           </div>
         ) : (
           <form className="auth-form" onSubmit={handleResetPassword}>
-            {error && <div className="alert alert-danger">⚠️ {error}</div>}
+            {error && <div className="alert alert-danger">{error}</div>}
 
             <div className="input-group">
               <label>New Password</label>
@@ -130,7 +130,7 @@ export default function ResetPasswordPage() {
                   required 
                   minLength={6}
                 />
-                <span className="input-icon" onClick={() => setShowPass(!showPass)}>{showPass ? '🙈' : '👁️'}</span>
+                <span className="input-icon" onClick={() => setShowPass(!showPass)}>{showPass ? '' : ''}</span>
               </div>
             </div>
 
@@ -145,18 +145,18 @@ export default function ResetPasswordPage() {
                   required 
                   minLength={6}
                 />
-                <span className="input-icon" onClick={() => setShowConfirmPass(!showConfirmPass)}>{showConfirmPass ? '🙈' : '👁️'}</span>
+                <span className="input-icon" onClick={() => setShowConfirmPass(!showConfirmPass)}>{showConfirmPass ? '' : ''}</span>
               </div>
             </div>
 
             <button type="submit" className="btn btn-primary btn-lg w-full" disabled={loading}>
-              {loading ? '⏳ Resetting...' : 'Reset Password →'}
+              {loading ? 'Resetting...' : 'Reset Password →'}
             </button>
           </form>
         )}
 
         <div style={{ marginTop: 20, padding: 14, background: '#F8FAFC', borderRadius: 10, border: '1px solid #E2E8F0', textAlign: 'center' }}>
-          <p style={{ fontSize: 11, color: '#64748B' }}>🏢 <strong>JOBOOK</strong> — Spatial Room Booking System</p>
+          <p style={{ fontSize: 11, color: '#64748B' }}><strong>JOBOOK</strong> — Spatial Room Booking System</p>
         </div>
       </div>
     </div>

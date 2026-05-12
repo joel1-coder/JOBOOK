@@ -56,10 +56,10 @@ export default function MyBookings() {
           {/* Stat cards — 4-col desktop, 2-col mobile */}
           <div className="bookings-stats-grid" style={{ marginBottom: 24 }}>
             {[
-              { label: 'Total', value: counts.total, icon: '📋', color: '#EEF2FF', accent: '#6366F1' },
-              { label: 'Confirmed', value: counts.confirmed, icon: '✅', color: '#DCFCE7', accent: '#10B981' },
-              { label: 'Completed', value: counts.completed, icon: '🏁', color: '#EFF6FF', accent: '#3B82F6' },
-              { label: 'Cancelled', value: counts.cancelled, icon: '❌', color: '#FEE2E2', accent: '#EF4444' },
+              { label: 'Total', value: counts.total, icon: '', color: '#EEF2FF', accent: '#6366F1' },
+              { label: 'Confirmed', value: counts.confirmed, icon: '', color: '#DCFCE7', accent: '#10B981' },
+              { label: 'Completed', value: counts.completed, icon: '', color: '#EFF6FF', accent: '#3B82F6' },
+              { label: 'Cancelled', value: counts.cancelled, icon: '', color: '#FEE2E2', accent: '#EF4444' },
             ].map(s => (
               <div key={s.label} className="card" style={{ padding: '16px 20px', borderTop: `3px solid ${s.accent}` }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -76,7 +76,6 @@ export default function MyBookings() {
           {/* Search + filter pills */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, marginBottom: 20 }}>
             <div className="search-box" style={{ maxWidth: '100%' }}>
-              <span>🔍</span>
               <input placeholder="Search bookings…" value={search} onChange={e => setSearch(e.target.value)} />
             </div>
             <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
@@ -93,18 +92,18 @@ export default function MyBookings() {
               <p style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>Loading bookings…</p>
             ) : filtered.length === 0 ? (
               <div style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>
-                <div style={{ fontSize: 40, marginBottom: 12 }}>📭</div>
+                <div style={{ fontSize: 40, marginBottom: 12 }}></div>
                 <p>No bookings found</p>
               </div>
             ) : filtered.map(b => (
               <div key={b.id} className="booking-card" style={{ borderRadius: 0, borderBottom: '1px solid var(--clr-border)', margin: 0 }}>
-                <div className="booking-thumb">{b.rooms?.emoji || '🏢'}</div>
+                <div className="booking-thumb">{b.rooms?.name || 'Room'}</div>
                 <div className="booking-info">
                   <div className="booking-name">{b.rooms?.name || 'Unknown Room'}</div>
                   <div className="booking-meta">
-                    <span>🆔 {b.booking_ref}</span>
-                    <span>📆 {b.date}</span>
-                    <span>🕐 {b.time_slots?.label || '—'}</span>
+                    <span>{b.booking_ref}</span>
+                    <span>{b.date}</span>
+                    <span>{b.time_slots?.label || '—'}</span>
                   </div>
                 </div>
                 {statusBadge(b.status)}

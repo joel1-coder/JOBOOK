@@ -46,9 +46,9 @@ export default function AdminLoginPage() {
     setForgotLoading(false);
 
     if (error) {
-      setForgotMessage('❌ ' + error.message);
+      setForgotMessage('Error: ' + error.message);
     } else {
-      setForgotMessage('✅ Password reset email sent! Check your inbox.');
+      setForgotMessage('Password reset email sent! Check your inbox.');
       setTimeout(() => {
         setShowForgotPassword(false);
         setForgotEmail('');
@@ -80,12 +80,12 @@ export default function AdminLoginPage() {
         }}
         title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       >
-        {theme === 'light' ? '🌙' : '☀️'}
+        {theme === 'light' ? '' : ''}
         {theme === 'light' ? 'Dark' : 'Light'}
       </button>
       <div className="auth-card" style={{ maxWidth: 400 }}>
         <div style={{ textAlign: 'center', marginBottom: 24 }}>
-          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg,#4F46E5,#6D28D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, margin: '0 auto 14px' }}>🛡️</div>
+          <div style={{ width: 64, height: 64, borderRadius: '50%', background: 'linear-gradient(135deg,#4F46E5,#6D28D9)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 26, margin: '0 auto 14px' }}></div>
           <h1 className="auth-title" style={{ fontSize: 22 }}>Admin Access</h1>
           <p className="auth-subtitle">Authorized personnel only. All access attempts are logged and monitored.</p>
         </div>
@@ -95,7 +95,7 @@ export default function AdminLoginPage() {
         <form className="auth-form" onSubmit={handleLogin}>
           <div className="input-group">
             <div className="input-wrap has-icon-left">
-              <span className="input-icon-left">🔐</span>
+              <span className="input-icon-left"></span>
               <input type="email" placeholder="Admin email address" value={email} onChange={e => setEmail(e.target.value)} required />
             </div>
           </div>
@@ -105,13 +105,13 @@ export default function AdminLoginPage() {
               <span style={{ fontSize: 11, color: 'var(--clr-primary)', cursor: 'pointer', fontWeight: 500 }} onClick={() => setShowForgotPassword(true)}>Reset token?</span>
             </div>
             <div className="input-wrap has-icon-left">
-              <span className="input-icon-left">🔑</span>
+              <span className="input-icon-left"></span>
               <input type={showToken ? 'text' : 'password'} placeholder="••••••••" value={token} onChange={e => setToken(e.target.value)} required />
-              <span className="input-icon" onClick={() => setShowToken(!showToken)}>{showToken ? '🙈' : '👁️'}</span>
+              <span className="input-icon" onClick={() => setShowToken(!showToken)}>{showToken ? '' : ''}</span>
             </div>
           </div>
           <button type="submit" className="btn btn-primary btn-lg w-full" disabled={loading} style={{ background: 'linear-gradient(135deg,#4F46E5,#4338CA)' }}>
-            {loading ? '⏳ Verifying…' : '🔒 Secure Login'}
+            {loading ? 'Verifying…' : 'Secure Login'}
           </button>
         </form>
 
@@ -120,7 +120,7 @@ export default function AdminLoginPage() {
         </p>
 
         <div style={{ marginTop: 20, padding: '12px 14px', background: '#FEF2F2', borderRadius: 8, border: '1px solid #FECACA', display: 'flex', alignItems: 'flex-start', gap: 8 }}>
-          <span style={{ fontSize: 14 }}>⚠️</span>
+          <span style={{ fontSize: 14 }}></span>
           <p style={{ fontSize: 11, color: '#991B1B' }}>Unauthorized access to this system is strictly prohibited by federal law and is punishable to the fullest extent.</p>
         </div>
       </div>
@@ -151,7 +151,7 @@ export default function AdminLoginPage() {
               </div>
 
               {forgotMessage && (
-                <div style={{ padding: 12, borderRadius: 8, background: forgotMessage.includes('✅') ? '#DCFCE7' : '#FEE2E2', border: `1px solid ${forgotMessage.includes('✅') ? '#86EFAC' : '#FECACA'}`, fontSize: 13 }}>
+                <div style={{ padding: 12, borderRadius: 8, background: forgotMessage.includes('sent') ? '#DCFCE7' : '#FEE2E2', border: `1px solid ${forgotMessage.includes('sent') ? '#86EFAC' : '#FECACA'}`, fontSize: 13 }}>
                   {forgotMessage}
                 </div>
               )}

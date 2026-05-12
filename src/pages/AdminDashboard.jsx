@@ -72,7 +72,7 @@ export default function AdminDashboard() {
       label: 'Total Bookings',
       value: total,
       sub: 'All time',
-      icon: '📋',
+      icon: '',
       accent: '#6366F1',
       bg: 'linear-gradient(135deg,#EEF2FF,#E0E7FF)',
     },
@@ -80,7 +80,7 @@ export default function AdminDashboard() {
       label: "Today's Bookings",
       value: todayCount,
       sub: fmt(today).split(',')[0],
-      icon: '📅',
+      icon: '',
       accent: '#10B981',
       bg: 'linear-gradient(135deg,#D1FAE5,#A7F3D0)',
     },
@@ -88,7 +88,7 @@ export default function AdminDashboard() {
       label: 'Pending Approval',
       value: pending,
       sub: pending > 0 ? 'Needs attention' : 'All clear',
-      icon: '⏳',
+      icon: '',
       accent: '#F59E0B',
       bg: 'linear-gradient(135deg,#FEF3C7,#FDE68A)',
     },
@@ -96,7 +96,7 @@ export default function AdminDashboard() {
       label: 'Occupancy Rate',
       value: `${occupancy}%`,
       sub: `${confirmed} confirmed`,
-      icon: '📈',
+      icon: '',
       accent: '#3B82F6',
       bg: 'linear-gradient(135deg,#EFF6FF,#DBEAFE)',
     },
@@ -117,11 +117,11 @@ export default function AdminDashboard() {
 
   /* ── Quick actions ── */
   const actions = [
-    { icon: '🏢', label: 'Manage Rooms',    path: '/admin/rooms',    color: '#EEF2FF', accent: '#6366F1' },
-    { icon: '📋', label: 'All Bookings',    path: '/admin/bookings', color: '#D1FAE5', accent: '#10B981' },
-    { icon: '🕐', label: 'Manage Slots',    path: '/admin/slots',    color: '#FEF3C7', accent: '#F59E0B' },
-    { icon: '👥', label: 'Users',           path: '/admin/users',    color: '#EFF6FF', accent: '#3B82F6' },
-    { icon: '⚙️', label: 'Rules & Settings',path: '/admin/rules',    color: '#FDF4FF', accent: '#A855F7' },
+    { icon: '', label: 'Manage Rooms',    path: '/admin/rooms',    color: '#EEF2FF', accent: '#6366F1' },
+    { icon: '', label: 'All Bookings',    path: '/admin/bookings', color: '#D1FAE5', accent: '#10B981' },
+    { icon: '', label: 'Manage Slots',    path: '/admin/slots',    color: '#FEF3C7', accent: '#F59E0B' },
+    { icon: '', label: 'Users',           path: '/admin/users',    color: '#EFF6FF', accent: '#3B82F6' },
+    { icon: '', label: 'Rules & Settings',path: '/admin/rules',    color: '#FDF4FF', accent: '#A855F7' },
   ];
 
   /* ── Recent activity ── */
@@ -178,7 +178,7 @@ export default function AdminDashboard() {
                 {greeting}
               </div>
               <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 8 }}>
-                {displayName} 👋
+                {displayName}
               </h1>
               <p style={{ fontSize: 14, opacity: .8, maxWidth: 480 }}>
                 You have <strong style={{ color: '#A5B4FC' }}>{pending} pending</strong> bookings waiting for approval
@@ -188,13 +188,13 @@ export default function AdminDashboard() {
                 <button className="btn"
                   onClick={() => navigate('/admin/bookings')}
                   style={{ background: 'rgba(255,255,255,.2)', color: '#fff', border: '1px solid rgba(255,255,255,.3)', backdropFilter: 'blur(4px)' }}>
-                  📋 View All Bookings
+                  View All Bookings
                 </button>
                 {pending > 0 && (
                   <button className="btn"
                     onClick={() => navigate('/admin/bookings')}
                     style={{ background: '#F59E0B', color: '#fff', border: 'none', fontWeight: 700 }}>
-                    ⚠️ Review {pending} Pending
+                    Review {pending} Pending
                   </button>
                 )}
               </div>
@@ -352,10 +352,10 @@ export default function AdminDashboard() {
               <div style={{ fontSize: 12, opacity: .6, marginBottom: 20 }}>Real-time infrastructure health</div>
 
               {[
-                { name: 'Database',   status: 'Operational', icon: '🗄️',  latency: '12ms'  },
-                { name: 'Auth',       status: 'Operational', icon: '🔐',  latency: '8ms'   },
-                { name: 'API Server', status: 'Operational', icon: '⚡',  latency: '34ms'  },
-                { name: 'Storage',    status: 'Operational', icon: '💾',  latency: '21ms'  },
+                { name: 'Database',   status: 'Operational', icon: '',  latency: '12ms'  },
+                { name: 'Auth',       status: 'Operational', icon: '',  latency: '8ms'   },
+                { name: 'API Server', status: 'Operational', icon: '',  latency: '34ms'  },
+                { name: 'Storage',    status: 'Operational', icon: '',  latency: '21ms'  },
               ].map(s => (
                 <div key={s.name} style={{
                   display: 'flex', justifyContent: 'space-between', alignItems: 'center',

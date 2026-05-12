@@ -170,10 +170,10 @@ export default function UserManagement() {
           {error && <div className="alert alert-danger">{error}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
             {[
-              { label: 'Total Users', value: users.length, icon: '👥', color: '#EEF2FF' },
-              { label: 'Active', value: users.filter(u => u.status === 'active').length, icon: '✅', color: '#DCFCE7' },
-              { label: 'Admins', value: users.filter(u => u.role === 'admin').length, icon: '🛡️', color: '#FEF3C7' },
-              { label: 'Inactive', value: users.filter(u => u.status === 'inactive').length, icon: '⛔', color: '#FEE2E2' },
+              { label: 'Total Users', value: users.length, icon: '', color: '#EEF2FF' },
+              { label: 'Active', value: users.filter(u => u.status === 'active').length, icon: '', color: '#DCFCE7' },
+              { label: 'Admins', value: users.filter(u => u.role === 'admin').length, icon: '', color: '#FEF3C7' },
+              { label: 'Inactive', value: users.filter(u => u.status === 'inactive').length, icon: '', color: '#FEE2E2' },
             ].map(s => (
               <div key={s.label} className="card" style={{ padding: '16px 20px' }}>
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -189,7 +189,7 @@ export default function UserManagement() {
 
           <div className="toolbar">
             <div className="search-box">
-              <span>🔍</span>
+              <span></span>
               <input placeholder="Search users…" value={search} onChange={e => setSearch(e.target.value)} />
             </div>
             <select className="filter-select" value={roleFilter} onChange={e => setRoleFilter(e.target.value)}>
@@ -227,10 +227,10 @@ export default function UserManagement() {
                       <td><span className={`badge ${u.status === 'active' ? 'badge-success' : 'badge-muted'}`}>{u.status === 'active' ? '● Active' : '○ Inactive'}</span></td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => handleEditUser(u)} title="Edit User" disabled={updating}>✏️ Edit</button>
-                          <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role" disabled={updating === u.id}>{u.role === 'admin' ? '👤 Demote' : '🛡️ Promote'}</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => handleEditUser(u)} title="Edit User" disabled={updating}>Edit</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role" disabled={updating === u.id}>{u.role === 'admin' ? 'Demote' : 'Promote'}</button>
                           <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)} title="Toggle Status" disabled={updating === u.id}>{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
-                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User" disabled={updating === u.id}>🗑️</button>
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User" disabled={updating === u.id}></button>
                         </div>
                       </td>
                     </tr>
@@ -239,7 +239,7 @@ export default function UserManagement() {
               </table>
               {!loading && filtered.length === 0 && (
                 <div style={{ padding: 40, textAlign: 'center', color: 'var(--clr-text-muted)' }}>
-                  <div style={{ fontSize: 36, marginBottom: 10 }}>👤</div><p>No users found</p>
+                  <div style={{ fontSize: 36, marginBottom: 10 }}></div><p>No users found</p>
                 </div>
               )}
             </div>

@@ -29,7 +29,7 @@ export default function LoginPage() {
       const { error: err } = await signup(email, password, fullName);
       setLoading(false);
       if (err) { setError(err.message); return; }
-      alert('✅ Check your email to confirm your account, then log in!');
+      alert('Check your email to confirm your account, then log in!');
       setIsSignup(false);
       return;
     }
@@ -49,9 +49,9 @@ export default function LoginPage() {
     setForgotLoading(false);
 
     if (error) {
-      setForgotMessage('❌ ' + error.message);
+      setForgotMessage('' + error.message);
     } else {
-      setForgotMessage('✅ Password reset email sent! Check your inbox.');
+      setForgotMessage('Password reset email sent! Check your inbox.');
       setTimeout(() => {
         setShowForgotPassword(false);
         setForgotEmail('');
@@ -83,12 +83,12 @@ export default function LoginPage() {
         }}
         title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
       >
-        {theme === 'light' ? '🌙' : '☀️'}
+        {theme === 'light' ? '' : ''}
         {theme === 'light' ? 'Dark' : 'Light'}
       </button>
       <div className="auth-card">
         <div className="auth-brand">
-          <div className="auth-brand-icon">🛡️</div>
+          <div className="auth-brand-icon"></div>
           <span className="auth-brand-name">JOBOOK</span>
         </div>
 
@@ -96,11 +96,11 @@ export default function LoginPage() {
         <p className="auth-subtitle">{isSignup ? 'Sign up to get started' : 'Sign in to your account'}</p>
 
         <div className="auth-tabs">
-          <button className="auth-tab active">👤 User Login</button>
-          <button className="auth-tab" onClick={() => navigate('/admin-login')}>⚙️ Admin Portal</button>
+          <button className="auth-tab active">User Login</button>
+          <button className="auth-tab" onClick={() => navigate('/admin-login')}>Admin Portal</button>
         </div>
 
-        {error && <div className="alert alert-danger">⚠️ {error}</div>}
+        {error && <div className="alert alert-danger">{error}</div>}
 
         <form className="auth-form" onSubmit={handleSubmit}>
           {isSignup && (
@@ -127,7 +127,7 @@ export default function LoginPage() {
             <div className="input-wrap">
               <input type={showPass ? 'text' : 'password'} placeholder="••••••••" value={password}
                 onChange={e => setPassword(e.target.value)} required minLength={6} />
-              <span className="input-icon" onClick={() => setShowPass(!showPass)}>{showPass ? '🙈' : '👁️'}</span>
+              <span className="input-icon" onClick={() => setShowPass(!showPass)}>{showPass ? '' : ''}</span>
             </div>
           </div>
           <button type="submit" className="btn btn-primary btn-lg w-full" disabled={loading}>
@@ -143,7 +143,7 @@ export default function LoginPage() {
         </p>
 
         <div style={{ marginTop: 20, padding: 14, background: '#F8FAFC', borderRadius: 10, border: '1px solid #E2E8F0', textAlign: 'center' }}>
-          <p style={{ fontSize: 11, color: '#64748B' }}>🏢 <strong>JOBOOK</strong> — Spatial Room Booking System</p>
+          <p style={{ fontSize: 11, color: '#64748B' }}><strong>JOBOOK</strong> — Spatial Room Booking System</p>
         </div>
       </div>
 
@@ -173,7 +173,7 @@ export default function LoginPage() {
               </div>
 
               {forgotMessage && (
-                <div style={{ padding: 12, borderRadius: 8, background: forgotMessage.includes('✅') ? '#DCFCE7' : '#FEE2E2', border: `1px solid ${forgotMessage.includes('✅') ? '#86EFAC' : '#FECACA'}`, fontSize: 13 }}>
+                <div style={{ padding: 12, borderRadius: 8, background: forgotMessage.includes('Password reset') ? '#DCFCE7' : '#FEE2E2', border: `1px solid ${forgotMessage.includes('Password reset') ? '#86EFAC' : '#FECACA'}`, fontSize: 13 }}>
                   {forgotMessage}
                 </div>
               )}

@@ -147,7 +147,7 @@ export default function SchedulePage() {
       <Sidebar />
       <div className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <div style={{ textAlign: 'center' }}>
-          <div style={{ fontSize: 72, marginBottom: 16 }}>✅</div>
+          <div style={{ fontSize: 72, marginBottom: 16 }}></div>
           <h2 style={{ fontWeight: 800, fontSize: 24, marginBottom: 8 }}>Booking Requested!</h2>
           <p style={{ color: '#64748B' }}>Pending admin approval. Redirecting…</p>
         </div>
@@ -185,7 +185,7 @@ export default function SchedulePage() {
                   fontWeight: selectedRoom?.id === r.id ? 700 : 400, cursor: 'pointer',
                   fontSize: 13, transition: 'all .15s',
                 }}>
-                  <span>{r.emoji}</span>{r.name}
+                  {r.name}
                 </button>
               ))}
             </div>
@@ -202,7 +202,6 @@ export default function SchedulePage() {
               {selectedRoom && (
                 <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 20, display: 'flex', gap: 20, alignItems: 'center' }}>
                   <div style={{ width: 64, height: 64, borderRadius: 10, background: 'linear-gradient(135deg,#4F46E5,#818CF8)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 28, flexShrink: 0 }}>
-                    {selectedRoom.emoji}
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ marginBottom: 4 }}>
@@ -210,10 +209,10 @@ export default function SchedulePage() {
                     </div>
                     <h2 style={{ fontSize: 18, fontWeight: 800, marginBottom: 5 }}>{selectedRoom.name}</h2>
                     <div style={{ display: 'flex', gap: 14, fontSize: 12, color: '#64748B', flexWrap: 'wrap' }}>
-                      <span>👥 {selectedRoom.capacity} Persons</span>
-                      <span>📍 {selectedRoom.floor}</span>
-                      <span>🏢 {selectedRoom.building}</span>
-                      {selectedRoom.type && <span>🏷️ {selectedRoom.type}</span>}
+                      <span>{selectedRoom.capacity} Persons</span>
+                      <span>{selectedRoom.floor}</span>
+                      <span>{selectedRoom.building}</span>
+                      {selectedRoom.type && <span>{selectedRoom.type}</span>}
                     </div>
                   </div>
                 </div>
@@ -222,7 +221,7 @@ export default function SchedulePage() {
               {/* No slots message */}
               {slots.length === 0 && (
                 <div style={{ textAlign: 'center', padding: 60, background: '#fff', borderRadius: 12, border: '1px dashed #E2E8F0' }}>
-                  <div style={{ fontSize: 48, marginBottom: 12 }}>🕐</div>
+                  <div style={{ fontSize: 48, marginBottom: 12 }}></div>
                   <p style={{ fontWeight: 700, fontSize: 16, marginBottom: 6 }}>No time slots configured</p>
                   <p style={{ fontSize: 13, color: '#64748B' }}>The admin needs to add time slots via <strong>Manage Slots</strong> before you can book.</p>
                 </div>
@@ -232,7 +231,7 @@ export default function SchedulePage() {
               {morningSlots.length > 0 && (
                 <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20, marginBottom: 16 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                    <span style={{ fontSize: 16 }}>🌅</span>
+                    <span style={{ fontSize: 16 }}></span>
                     <h3 style={{ fontWeight: 700, fontSize: 15 }}>Morning Slots</h3>
                     <span style={{ fontSize: 12, color: '#94A3B8', background: '#F8FAFC', borderRadius: 6, padding: '2px 8px' }}>08:00 – 12:00</span>
                   </div>
@@ -248,7 +247,7 @@ export default function SchedulePage() {
               {afternoonSlots.length > 0 && (
                 <div style={{ background: '#fff', borderRadius: 12, border: '1px solid #E2E8F0', padding: 20 }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 16 }}>
-                    <span style={{ fontSize: 16 }}>🌤️</span>
+                    <span style={{ fontSize: 16 }}></span>
                     <h3 style={{ fontWeight: 700, fontSize: 15 }}>Afternoon Slots</h3>
                     <span style={{ fontSize: 12, color: '#94A3B8', background: '#F8FAFC', borderRadius: 6, padding: '2px 8px' }}>12:00 – 18:00</span>
                   </div>
@@ -273,7 +272,7 @@ export default function SchedulePage() {
             animation: 'fadeUp .2s ease',
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              <div style={{ width: 42, height: 42, background: '#EEF2FF', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}>📅</div>
+              <div style={{ width: 42, height: 42, background: '#EEF2FF', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}></div>
               <div>
                 <div style={{ fontSize: 10, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 4 }}>Confirm Selection</div>
                 <div style={{ display: 'flex', gap: 28 }}>

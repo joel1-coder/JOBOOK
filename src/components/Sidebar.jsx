@@ -4,19 +4,19 @@ import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
 
 const userNav = [
-  { label: 'Dashboard', icon: '📊', path: '/dashboard' },
-  { label: 'Schedule',  icon: '📅', path: '/schedule' },
-  { label: 'My Bookings', icon: '🗓️', path: '/my-bookings' },
-  { label: 'Profile', icon: '👤', path: '/profile' },
+  { label: 'Dashboard', icon: '', path: '/dashboard' },
+  { label: 'Schedule',  icon: '', path: '/schedule' },
+  { label: 'My Bookings', icon: '', path: '/my-bookings' },
+  { label: 'Profile', icon: '', path: '/profile' },
 ];
 
 const adminNav = [
-  { label: 'Dashboard', icon: '📊', path: '/admin/dashboard', section: 'OVERVIEW' },
-  { label: 'Manage Bookings', icon: '📋', path: '/admin/bookings', section: 'MANAGEMENT' },
-  { label: 'Manage Rooms', icon: '🏢', path: '/admin/rooms' },
-  { label: 'Manage Slots', icon: '🕐', path: '/admin/slots' },
-  { label: 'Users', icon: '👥', path: '/admin/users' },
-  { label: 'Settings', icon: '⚙️', path: '/admin/rules' },
+  { label: 'Dashboard', icon: '', path: '/admin/dashboard', section: 'OVERVIEW' },
+  { label: 'Manage Bookings', icon: '', path: '/admin/bookings', section: 'MANAGEMENT' },
+  { label: 'Manage Rooms', icon: '', path: '/admin/rooms' },
+  { label: 'Manage Slots', icon: '', path: '/admin/slots' },
+  { label: 'Users', icon: '', path: '/admin/users' },
+  { label: 'Settings', icon: '', path: '/admin/rules' },
 ];
 
 export default function Sidebar() {
@@ -63,7 +63,7 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-brand">
-          <div className="sidebar-brand-icon">🏢</div>
+          <div className="sidebar-brand-icon"></div>
           <span className="sidebar-brand-name">JOBOOK</span>
         </div>
 
@@ -91,11 +91,11 @@ export default function Sidebar() {
             </div>
           </div>
           <button className="sidebar-item" style={{ marginTop: 6 }} onClick={toggleTheme} title={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}>
-            <span className="sidebar-item-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
+            <span className="sidebar-item-icon"></span>
             {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
           </button>
           <button className="sidebar-item" style={{ marginTop: 6, color: '#F87171' }} onClick={handleLogout}>
-            <span className="sidebar-item-icon">🚪</span>
+            <span className="sidebar-item-icon"></span>
             Sign Out
           </button>
         </div>

@@ -59,7 +59,6 @@ export default function NotificationDropdown() {
 
   return (
     <div className="header-notif" ref={dropdownRef} onClick={() => setIsOpen(!isOpen)} style={{ position: 'relative' }}>
-      🔔
       {unreadCount > 0 && <span className="header-notif-dot" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#fff', fontSize: 10, fontWeight: 800, width: 16, height: 16, right: -4, top: -4 }}>{unreadCount}</span>}
 
       {isOpen && (
@@ -91,7 +90,7 @@ export default function NotificationDropdown() {
                   cursor: 'pointer', transition: 'background .2s', display: 'flex', gap: 12
                 }}>
                   <div style={{ fontSize: 20 }}>
-                    {n.type.includes('requested') ? '📩' : n.type.includes('approved') ? '✅' : n.type.includes('rejected') ? '❌' : 'ℹ️'}
+                    {n.type.includes('requested') ? '' : n.type.includes('approved') ? '' : n.type.includes('rejected') ? '' : ''}
                   </div>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: n.is_read ? 500 : 700, color: 'var(--clr-text)' }}>{n.title}</div>

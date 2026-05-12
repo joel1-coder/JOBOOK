@@ -69,16 +69,16 @@ export default function BookingRules() {
             <div className="page-subtitle">Configure system-wide booking policies</div>
           </div>
           <button className="btn btn-primary" disabled={saving} onClick={handleSave}>
-            {saving ? '⏳ Saving…' : '💾 Save Rules'}
+            {saving ? 'Saving…' : 'Save Rules'}
           </button>
         </div>
 
         <div className="page-body">
-          {saved && <div className="alert alert-info">✅ Booking rules saved to database!</div>}
+          {saved && <div className="alert alert-info">Booking rules saved to database!</div>}
 
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: 24 }}>
             <div className="card card-lg">
-              <h3 style={{ fontWeight: 700, marginBottom: 4 }}>📋 Booking Limits</h3>
+              <h3 style={{ fontWeight: 700, marginBottom: 4 }}>Booking Limits</h3>
               <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', marginBottom: 16 }}>Control how many bookings users can make</p>
               <NumberInput label="Max Bookings / Day" k="max_bookings_per_day" min={1} max={20} suffix="bookings" />
               <NumberInput label="Max Bookings / Week" k="max_bookings_per_week" min={1} max={50} suffix="bookings" />
@@ -87,7 +87,7 @@ export default function BookingRules() {
             </div>
 
             <div className="card card-lg">
-              <h3 style={{ fontWeight: 700, marginBottom: 4 }}>⏰ Timing Rules</h3>
+              <h3 style={{ fontWeight: 700, marginBottom: 4 }}>Timing Rules</h3>
               <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', marginBottom: 16 }}>Configure advance booking and notice periods</p>
               <NumberInput label="Min Notice Period" k="min_notice_mins" min={0} max={240} suffix="mins" />
               <NumberInput label="Max Advance Booking" k="max_advance_days" min={1} max={90} suffix="days" />
@@ -95,7 +95,7 @@ export default function BookingRules() {
             </div>
 
             <div className="card card-lg">
-              <h3 style={{ fontWeight: 700, marginBottom: 4 }}>🔧 Booking Policies</h3>
+              <h3 style={{ fontWeight: 700, marginBottom: 4 }}>Booking Policies</h3>
               <p style={{ fontSize: 12, color: 'var(--clr-text-muted)', marginBottom: 8 }}>Toggle system-wide features on or off</p>
               <Toggle label="Allow Weekend Bookings" desc="Rooms can be booked on Saturdays and Sundays" k="allow_weekends" />
               <Toggle label="Require Admin Approval" desc="All new bookings must be approved by an admin" k="require_approval" />
@@ -104,7 +104,7 @@ export default function BookingRules() {
             </div>
 
             <div className="card card-lg" style={{ background: 'linear-gradient(135deg,#0F172A,#1E293B)', color: '#fff', border: 'none' }}>
-              <h3 style={{ fontWeight: 700, marginBottom: 4, color: '#fff' }}>📊 Rules Summary</h3>
+              <h3 style={{ fontWeight: 700, marginBottom: 4, color: '#fff' }}>Rules Summary</h3>
               <p style={{ fontSize: 12, opacity: .6, marginBottom: 16 }}>Current configuration</p>
               {[
                 { label: 'Daily Limit', value: `${rules.max_bookings_per_day} bookings` },
@@ -112,10 +112,10 @@ export default function BookingRules() {
                 { label: 'Max Duration', value: `${rules.max_duration_hours} hrs` },
                 { label: 'Advance Booking', value: `${rules.max_advance_days} days` },
                 { label: 'Min Notice', value: `${rules.min_notice_mins} mins` },
-                { label: 'Weekend Booking', value: rules.allow_weekends ? '✅ Allowed' : '❌ Disabled' },
-                { label: 'Admin Approval', value: rules.require_approval ? '✅ Required' : '❌ Not required' },
-                { label: 'Auto-Cancel', value: rules.auto_cancel ? `✅ After ${rules.auto_cancel_mins} mins` : '❌ Off' },
-                { label: 'Guest Booking', value: rules.allow_guest_booking ? '✅ Enabled' : '❌ Disabled' },
+                { label: 'Weekend Booking', value: rules.allow_weekends ? 'Allowed' : 'Disabled' },
+                { label: 'Admin Approval', value: rules.require_approval ? 'Required' : 'Not required' },
+                { label: 'Auto-Cancel', value: rules.auto_cancel ? `After ${rules.auto_cancel_mins} mins` : 'Off' },
+                { label: 'Guest Booking', value: rules.allow_guest_booking ? 'Enabled' : 'Disabled' },
               ].map(r => (
                 <div key={r.label} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px 0', borderBottom: '1px solid rgba(255,255,255,.08)', fontSize: 13 }}>
                   <span style={{ opacity: .65 }}>{r.label}</span>
