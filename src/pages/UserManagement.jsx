@@ -13,6 +13,8 @@ export default function UserManagement() {
   const [editingUserId, setEditingUserId] = useState(null);
   const [formData, setFormData] = useState({ staff_id: '', full_name: '', email: '', password: '', department: '' });
   const [formLoading, setFormLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [updating, setUpdating] = useState(null);
 
   useEffect(() => {
     loadUsers();
@@ -27,19 +29,36 @@ export default function UserManagement() {
 
   const toggleRole = async (u) => {
     const newRole = u.role === 'admin' ? 'user' : 'admin';
-    await profileService.updateUserRole(u.id, newRole);
-    setUsers(prev => prev.map(p => p.id === u.id ? { ...p, role: newRole } : p));
+    setUpdating(u.id);
+    setError('');
+    const { error: err } = await profileService.updateUserRole(u.id, newRole);
+    setUpdating(null);
+    
+    if (err) {
+      setError('Error updating role: ' + err.message);
+    } else {
+      setUsers(prev => prev.map(p => p.id === u.id ? { ...p, role: newRole } : p));
+    }
   };
 
   const toggleStatus = async (u) => {
     const newStatus = u.status === 'active' ? 'inactive' : 'active';
-    await profileService.updateUserStatus(u.id, newStatus);
-    setUsers(prev => prev.map(p => p.id === u.id ? { ...p, status: newStatus } : p));
+    setUpdating(u.id);
+    setError('');
+    const { error: err } = await profileService.updateUserStatus(u.id, newStatus);
+    setUpdating(null);
+    
+    if (err) {
+      setError('Error updating status: ' + err.message);
+    } else {
+      setUsers(prev => prev.map(p => p.id === u.id ? { ...p, status: newStatus } : p));
+    }
   };
 
   const handleCreateUser = async (e) => {
     e.preventDefault();
     setFormLoading(true);
+    setError('');
     try {
       const { data, error } = await profileService.adminCreateUser(
         formData.email,
@@ -53,10 +72,10 @@ export default function UserManagement() {
       
       if (error) {
         console.error('RPC Error:', error);
-        alert('Error creating user: ' + (error.message || JSON.stringify(error)));
+        setError('Error creating user: ' + (error.message || JSON.stringify(error)));
       } else if (data?.error) {
         console.error('Function Error:', data.error);
-        alert('Error creating user: ' + data.error);
+        setError('Error creating user: ' + data.error);
       } else {
         console.log('User created successfully:', data);
         setShowModal(false);
@@ -66,7 +85,7 @@ export default function UserManagement() {
       }
     } catch (err) {
       console.error('Unexpected error:', err);
-      alert('Unexpected error: ' + err.message);
+      setError('Unexpected error: ' + err.message);
     }
     setFormLoading(false);
   };
@@ -86,16 +105,17 @@ export default function UserManagement() {
   const handleSaveUser = async (e) => {
     e.preventDefault();
     setFormLoading(true);
+    setError('');
     try {
-      const { error } = await profileService.updateProfile(editingUserId, {
+      const { error: err } = await profileService.updateProfile(editingUserId, {
         staff_id: formData.staff_id,
         full_name: formData.full_name,
         department: formData.department
       });
 
-      if (error) {
-        console.error('Error updating user:', error);
-        alert('Error updating user: ' + error.message);
+      if (err) {
+        console.error('Error updating user:', err);
+        setError('Error updating user: ' + err.message);
       } else {
         console.log('User updated successfully');
         setShowModal(false);
@@ -105,16 +125,20 @@ export default function UserManagement() {
       }
     } catch (err) {
       console.error('Unexpected error:', err);
-      alert('Unexpected error: ' + err.message);
+      setError('Unexpected error: ' + err.message);
     }
     setFormLoading(false);
   };
 
   const handleDeleteUser = async (u) => {
     if (!window.confirm(`Are you sure you want to completely delete ${u.full_name || u.email}? This cannot be undone.`)) return;
-    const { error } = await profileService.adminDeleteUser(u.id);
-    if (error) {
-      alert('Failed to delete user: ' + error.message);
+    setUpdating(u.id);
+    setError('');
+    const { error: err } = await profileService.adminDeleteUser(u.id);
+    setUpdating(null);
+    
+    if (err) {
+      setError('Failed to delete user: ' + err.message);
     } else {
       setUsers(prev => prev.filter(p => p.id !== u.id));
     }
@@ -143,6 +167,7 @@ export default function UserManagement() {
         </div>
 
         <div className="page-body">
+          {error && <div className="alert alert-danger">{error}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
             {[
               { label: 'Total Users', value: users.length, icon: '👥', color: '#EEF2FF' },
@@ -202,10 +227,10 @@ export default function UserManagement() {
                       <td><span className={`badge ${u.status === 'active' ? 'badge-success' : 'badge-muted'}`}>{u.status === 'active' ? '● Active' : '○ Inactive'}</span></td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => handleEditUser(u)} title="Edit User">✏️ Edit</button>
-                          <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role">{u.role === 'admin' ? '👤 Demote' : '🛡️ Promote'}</button>
-                          <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)} title="Toggle Status">{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
-                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User">🗑️</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => handleEditUser(u)} title="Edit User" disabled={updating}>✏️ Edit</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => toggleRole(u)} title="Toggle Role" disabled={updating === u.id}>{u.role === 'admin' ? '👤 Demote' : '🛡️ Promote'}</button>
+                          <button className={`btn btn-sm ${u.status === 'active' ? 'btn-danger' : 'btn-success'}`} onClick={() => toggleStatus(u)} title="Toggle Status" disabled={updating === u.id}>{u.status === 'active' ? 'Suspend' : 'Activate'}</button>
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteUser(u)} title="Delete User" disabled={updating === u.id}>🗑️</button>
                         </div>
                       </td>
                     </tr>
@@ -230,6 +255,8 @@ export default function UserManagement() {
               <h3 className="modal-title">{editingUserId ? 'Edit User' : 'Create New User'}</h3>
               <button className="btn btn-ghost" onClick={() => setShowModal(false)}>✖</button>
             </div>
+            
+            {error && <div className="alert alert-danger" style={{ marginBottom: 16 }}>{error}</div>}
             
             <form onSubmit={editingUserId ? handleSaveUser : handleCreateUser} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               <div className="input-group">

@@ -12,6 +12,8 @@ export default function ManageRooms() {
     type: '', description: '', emoji: '🏢', available: true,
   });
   const [formLoading, setFormLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [updating, setUpdating] = useState(null);
 
   useEffect(() => { loadRooms(); }, []);
 
@@ -37,28 +39,43 @@ export default function ManageRooms() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setFormLoading(true);
+    setError('');
     try {
       const fn = editingRoomId
         ? roomService.updateRoom(editingRoomId, formData)
         : roomService.createRoom(formData);
-      const { error } = await fn;
-      if (error) alert('Error: ' + error.message);
+      const { error: err } = await fn;
+      if (err) setError('Error: ' + err.message);
       else { setShowModal(false); loadRooms(); }
-    } catch (err) { alert('Error: ' + err.message); }
+    } catch (err) { setError('Error: ' + err.message); }
     setFormLoading(false);
   };
 
   const handleDeleteRoom = async (room) => {
     if (!window.confirm(`Delete "${room.name}"? This cannot be undone.`)) return;
-    const { error } = await roomService.deleteRoom(room.id);
-    if (error) alert('Error: ' + error.message);
-    else loadRooms();
+    setUpdating(room.id);
+    setError('');
+    const { error: err } = await roomService.deleteRoom(room.id);
+    setUpdating(null);
+    
+    if (err) {
+      setError('Error deleting room: ' + err.message);
+    } else {
+      loadRooms();
+    }
   };
 
   const toggleAvailability = async (room) => {
-    const { error } = await roomService.updateRoom(room.id, { available: !room.available });
-    if (error) alert('Error: ' + error.message);
-    else loadRooms();
+    setUpdating(room.id);
+    setError('');
+    const { error: err } = await roomService.updateRoom(room.id, { available: !room.available });
+    setUpdating(null);
+    
+    if (err) {
+      setError('Error updating room: ' + err.message);
+    } else {
+      loadRooms();
+    }
   };
 
   const stats = [
@@ -80,6 +97,8 @@ export default function ManageRooms() {
         </div>
 
         <div className="page-body">
+
+          {error && <div className="alert alert-danger">{error}</div>}
 
           {/* ── Stat Cards ── */}
           <div className="rooms-stats-grid" style={{ marginBottom: 24 }}>
@@ -128,11 +147,11 @@ export default function ManageRooms() {
                       <td><span className={`badge ${room.available ? 'badge-success' : 'badge-muted'}`}>{room.available ? '● Available' : '○ Unavailable'}</span></td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => handleEditRoom(room)}>✏️ Edit</button>
-                          <button className={`btn btn-sm ${room.available ? 'btn-warning' : 'btn-success'}`} onClick={() => toggleAvailability(room)}>
-                            {room.available ? '🔒 Disable' : '✅ Enable'}
+                          <button className="btn btn-outline btn-sm" onClick={() => handleEditRoom(room)} disabled={updating}>✏️ Edit</button>
+                          <button className={`btn btn-sm ${room.available ? 'btn-warning' : 'btn-success'}`} onClick={() => toggleAvailability(room)} disabled={updating === room.id}>
+                            {updating === room.id ? '...' : room.available ? '🔒 Disable' : '✅ Enable'}
                           </button>
-                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteRoom(room)}>🗑️</button>
+                          <button className="btn btn-outline btn-sm" style={{ borderColor: 'var(--clr-danger)', color: 'var(--clr-danger)' }} onClick={() => handleDeleteRoom(room)} disabled={updating === room.id}>🗑️</button>
                         </div>
                       </td>
                     </tr>

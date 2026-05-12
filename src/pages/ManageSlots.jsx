@@ -57,29 +57,58 @@ export default function ManageSlots() {
   const [slots, setSlots] = useState([]);
   const [loading, setLoading] = useState(true);
   const [modal, setModal] = useState(null);
+  const [error, setError] = useState('');
+  const [updating, setUpdating] = useState(null);
 
   useEffect(() => {
     slotService.getSlots().then(({ data }) => { setSlots(data || []); setLoading(false); });
   }, []);
 
   const toggleActive = async (slot) => {
-    await slotService.updateSlot(slot.id, { active: !slot.active });
-    setSlots(prev => prev.map(s => s.id === slot.id ? { ...s, active: !s.active } : s));
+    setUpdating(slot.id);
+    setError('');
+    const { error: err } = await slotService.updateSlot(slot.id, { active: !slot.active });
+    setUpdating(null);
+    
+    if (err) {
+      setError('Error updating slot: ' + err.message);
+    } else {
+      setSlots(prev => prev.map(s => s.id === slot.id ? { ...s, active: !s.active } : s));
+    }
   };
 
   const deleteSlot = async (id) => {
     if (!confirm('Delete this slot?')) return;
-    await slotService.deleteSlot(id);
-    setSlots(prev => prev.filter(s => s.id !== id));
+    setUpdating(id);
+    setError('');
+    const { error: err } = await slotService.deleteSlot(id);
+    setUpdating(null);
+    
+    if (err) {
+      setError('Error deleting slot: ' + err.message);
+    } else {
+      setSlots(prev => prev.filter(s => s.id !== id));
+    }
   };
 
   const saveSlot = async (form) => {
+    setError('');
     if (modal === 'add') {
-      const { data } = await slotService.createSlot(form);
-      if (data) setSlots(prev => [...prev, data]);
+      const { data, error: err } = await slotService.createSlot(form);
+      if (err) {
+        setError('Error creating slot: ' + err.message);
+      } else if (data) {
+        setSlots(prev => [...prev, data]);
+        setModal(null);
+      }
     } else {
-      const { data } = await slotService.updateSlot(modal.id, form);
-      if (data) setSlots(prev => prev.map(s => s.id === modal.id ? data : s));
+      const { data, error: err } = await slotService.updateSlot(modal.id, form);
+      if (err) {
+        setError('Error updating slot: ' + err.message);
+      } else if (data) {
+        setSlots(prev => prev.map(s => s.id === modal.id ? data : s));
+        setModal(null);
+      }
     }
   };
 
@@ -96,6 +125,7 @@ export default function ManageSlots() {
         </div>
 
         <div className="page-body">
+          {error && <div className="alert alert-danger">{error}</div>}
           <div className="alert alert-info" style={{ marginBottom: 24 }}>
             ℹ️ Changes take effect for new bookings only. Existing confirmed bookings are not affected.
           </div>
@@ -117,14 +147,14 @@ export default function ManageSlots() {
                       <td style={{ fontSize: 13, color: 'var(--clr-text-muted)' }}>{s.days}</td>
                       <td style={{ fontSize: 13, color: 'var(--clr-text-muted)' }}>{s.rooms}</td>
                       <td>
-                        <button onClick={() => toggleActive(s)} style={{ padding: '4px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer', background: s.active ? '#DCFCE7' : '#F1F5F9', color: s.active ? '#15803D' : '#64748B', border: 'none' }}>
-                          {s.active ? '● Active' : '○ Inactive'}
+                        <button onClick={() => toggleActive(s)} disabled={updating === s.id} style={{ padding: '4px 12px', borderRadius: 999, fontSize: 11, fontWeight: 700, cursor: 'pointer', opacity: updating === s.id ? 0.6 : 1, background: s.active ? '#DCFCE7' : '#F1F5F9', color: s.active ? '#15803D' : '#64748B', border: 'none' }}>
+                          {updating === s.id ? '...' : s.active ? '● Active' : '○ Inactive'}
                         </button>
                       </td>
                       <td>
                         <div style={{ display: 'flex', gap: 6 }}>
-                          <button className="btn btn-outline btn-sm" onClick={() => setModal(s)}>✏️ Edit</button>
-                          <button className="btn btn-danger btn-sm" onClick={() => deleteSlot(s.id)}>🗑️</button>
+                          <button className="btn btn-outline btn-sm" onClick={() => setModal(s)} disabled={updating}>✏️ Edit</button>
+                          <button className="btn btn-danger btn-sm" onClick={() => deleteSlot(s.id)} disabled={updating === s.id}>🗑️</button>
                         </div>
                       </td>
                     </tr>

@@ -7,6 +7,8 @@ export default function ManageBookings() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all');
   const [search, setSearch] = useState('');
+  const [updating, setUpdating] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     bookingService.getAllBookings().then(({ data }) => {
@@ -16,7 +18,16 @@ export default function ManageBookings() {
   }, []);
 
   const updateStatus = async (id, status) => {
-    await bookingService.updateBookingStatus(id, status);
+    setUpdating(id);
+    setError('');
+    const { error: err } = await bookingService.updateBookingStatus(id, status);
+    setUpdating(null);
+    
+    if (err) {
+      setError('Failed to update booking: ' + err.message);
+      return;
+    }
+    
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
   };
 
@@ -47,6 +58,7 @@ export default function ManageBookings() {
         </div>
 
         <div className="page-body">
+          {error && <div className="alert alert-danger">{error}</div>}
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4,1fr)', gap: 14, marginBottom: 24 }}>
             {[
               { label: 'All', value: bookings.length, color: '#EEF2FF', key: 'all' },
@@ -103,12 +115,12 @@ export default function ManageBookings() {
                         <div style={{ display: 'flex', gap: 6 }}>
                           {b.status === 'pending' && (
                             <>
-                              <button className="btn btn-success btn-sm" onClick={() => updateStatus(b.id, 'confirmed')}>✓ Approve</button>
-                              <button className="btn btn-danger btn-sm" onClick={() => updateStatus(b.id, 'cancelled')}>✕ Reject</button>
+                              <button className="btn btn-success btn-sm" disabled={updating === b.id} onClick={() => updateStatus(b.id, 'confirmed')}>✓ {updating === b.id ? 'Updating...' : 'Approve'}</button>
+                              <button className="btn btn-danger btn-sm" disabled={updating === b.id} onClick={() => updateStatus(b.id, 'cancelled')}>✕ {updating === b.id ? 'Updating...' : 'Reject'}</button>
                             </>
                           )}
                           {b.status === 'confirmed' && (
-                            <button className="btn btn-danger btn-sm" onClick={() => updateStatus(b.id, 'cancelled')}>Cancel</button>
+                            <button className="btn btn-danger btn-sm" disabled={updating === b.id} onClick={() => updateStatus(b.id, 'cancelled')}>{updating === b.id ? 'Updating...' : 'Cancel'}</button>
                           )}
                           {(b.status === 'cancelled' || b.status === 'completed') && (
                             <span style={{ fontSize: 12, color: 'var(--clr-text-light)' }}>—</span>

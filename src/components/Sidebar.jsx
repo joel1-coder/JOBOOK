@@ -34,6 +34,11 @@ export default function Sidebar() {
     setMobileMenuOpen(false);
   };
 
+  const handleLogout = async () => {
+    await logout();
+    navigate('/');
+  };
+
   return (
     <>
       {/* Hamburger Button - Mobile Only */}
@@ -89,7 +94,7 @@ export default function Sidebar() {
             <span className="sidebar-item-icon">{theme === 'light' ? '🌙' : '☀️'}</span>
             {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
           </button>
-          <button className="sidebar-item" style={{ marginTop: 6, color: '#F87171' }} onClick={() => { logout(); navigate('/'); }}>
+          <button className="sidebar-item" style={{ marginTop: 6, color: '#F87171' }} onClick={handleLogout}>
             <span className="sidebar-item-icon">🚪</span>
             Sign Out
           </button>

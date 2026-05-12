@@ -30,19 +30,19 @@ function MiniCalendar({ selected, onSelect }) {
           <button onClick={() => setView(new Date(year, month + 1))} style={{ background: '#F1F5F9', border: 'none', borderRadius: 6, padding: '4px 10px', cursor: 'pointer', fontWeight: 700 }}>›</button>
         </div>
       </div>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 2, marginBottom: 8 }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(7,1fr)', gap: 4, marginBottom: 8 }}>
         {['S','M','T','W','T','F','S'].map((d, i) => (
           <div key={i} style={{ textAlign: 'center', fontSize: 11, fontWeight: 600, color: '#94A3B8', padding: 4 }}>{d}</div>
         ))}
         {days.map((d, i) => (
-          <div key={i} style={{ textAlign: 'center', padding: 2 }}>
+          <div key={i} style={{ textAlign: 'center', padding: 0, display: 'flex', justifyContent: 'center' }}>
             {d && (
               <button disabled={isPast(d)} onClick={() => onSelect(fmt(d))} style={{
-                width: 34, height: 34, borderRadius: '50%', border: 'none',
+                width: 32, height: 32, borderRadius: '50%', border: 'none',
                 cursor: isPast(d) ? 'not-allowed' : 'pointer',
                 background: isSelected(d) ? '#4F46E5' : isToday(d) ? '#EEF2FF' : 'transparent',
                 color: isSelected(d) ? '#fff' : isPast(d) ? '#CBD5E1' : '#0F172A',
-                fontWeight: isSelected(d) || isToday(d) ? 700 : 400, fontSize: 13, transition: 'all .15s',
+                fontWeight: isSelected(d) || isToday(d) ? 700 : 400, fontSize: 12, transition: 'all .15s',
               }}>{d}</button>
             )}
           </div>
