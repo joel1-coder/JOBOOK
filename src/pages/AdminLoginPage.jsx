@@ -6,7 +6,7 @@ import { profileService } from '../services/supabaseService';
 import { authService } from '../services/supabaseService';
 
 export default function AdminLoginPage() {
-  const { login } = useAuth();
+  const { login, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
@@ -31,9 +31,11 @@ export default function AdminLoginPage() {
     const { data: prof } = await profileService.getProfile(data.user.id);
     if (prof?.role !== 'admin') {
       setError('Access denied. This account does not have admin privileges.');
+      await logout();
       setLoading(false);
       return;
     }
+    setLoading(false);
     navigate('/admin/dashboard');
   };
 

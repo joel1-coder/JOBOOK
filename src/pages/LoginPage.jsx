@@ -2,10 +2,10 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { authService } from '../services/supabaseService';
+import { authService, profileService } from '../services/supabaseService';
 
 export default function LoginPage() {
-  const { login, signup } = useAuth();
+  const { login, signup, logout } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const [isSignup, setIsSignup] = useState(false);
@@ -35,9 +35,26 @@ export default function LoginPage() {
     }
 
     const { data, error: err } = await login(email, password);
-    setLoading(false);
-    if (err) { setError(err.message); return; }
-    if (data?.user) navigate('/dashboard');
+    if (err) {
+      setError(err.message);
+      setLoading(false);
+      return;
+    }
+
+    if (data?.user) {
+      // Prevent admin login on the user portal
+      const { data: prof } = await profileService.getProfile(data.user.id);
+      if (prof?.role === 'admin') {
+        setError('Access denied. Admin accounts must use the Admin Portal.');
+        await logout();
+        setLoading(false);
+        return;
+      }
+      setLoading(false);
+      navigate('/dashboard');
+    } else {
+      setLoading(false);
+    }
   };
 
   const handleForgotPassword = async (e) => {
