@@ -42,9 +42,8 @@ export default function LoginPage() {
     }
 
     if (data?.user) {
-      // Prevent admin login on the user portal
-      const { data: prof } = await profileService.getProfile(data.user.id);
-      if (prof?.role === 'admin') {
+      // Check if user role is admin (prevent admin login on user portal)
+      if (data.user.role === 'admin') {
         setError('Access denied. Admin accounts must use the Admin Portal.');
         await logout();
         setLoading(false);

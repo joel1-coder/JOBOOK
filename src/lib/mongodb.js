@@ -236,7 +236,12 @@ export const mongoClient = {
         }
         
         const session = {
-          user: { id: user.id, email: user.email, user_metadata: user.user_metadata },
+          user: { 
+            id: user.id, 
+            email: user.email,
+            role: user.role,
+            user_metadata: user.user_metadata
+          },
           access_token: `token_${user.id}`,
           expires_in: 3600
         };
