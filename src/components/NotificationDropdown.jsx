@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Bell, CheckCircle2, CircleAlert, Clock3 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { supabase } from '../lib/supabase';
 import { notificationService } from '../services/supabaseService';
 
 export default function NotificationDropdown() {
@@ -22,20 +21,10 @@ export default function NotificationDropdown() {
     };
     loadNotifications();
 
-    // Subscribe to real-time changes
-    const subscription = supabase
-      .channel('notifications_channel')
-      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` }, (payload) => {
-        setNotifications(prev => [payload.new, ...prev]);
-      })
-      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'notifications', filter: `user_id=eq.${user.id}` }, (payload) => {
-        setNotifications(prev => prev.map(n => n.id === payload.new.id ? payload.new : n));
-      })
-      .subscribe();
+    // Refresh notifications periodically (every 30 seconds)
+    const interval = setInterval(loadNotifications, 30000);
 
-    return () => {
-      supabase.removeChannel(subscription);
-    };
+    return () => clearInterval(interval);
   }, [user?.id]);
 
   useEffect(() => {

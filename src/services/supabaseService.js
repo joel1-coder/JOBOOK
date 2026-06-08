@@ -93,48 +93,56 @@ export const profileService = {
 
   adminCreateUser: async (email, password, fullName, department, staffId) => {
     try {
-      const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-      const session = await supabase.auth.getSession();
-      const token = session.data?.session?.access_token;
-
-      const response = await fetch(
-        `${supabaseUrl}/functions/v1/create-user`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            full_name: fullName,
-            department: department || 'General',
-            staff_id: staffId,
-          }),
-        }
-      );
-
-      const data = await response.json();
+      // Use MongoDB API to create user
+      const response = await fetch('http://localhost:5000/api/mongodb/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          email,
+          password, // Note: In production, this should be hashed on the server!
+          full_name: fullName,
+          department: department || 'General',
+          staff_id: staffId,
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString()
+        })
+      });
 
       if (!response.ok) {
-        console.error('Edge Function error:', data);
-        return { data: null, error: { message: data.error || 'Failed to create user' } };
+        const errorData = await response.json();
+        console.error('Error creating user:', errorData);
+        return { data: null, error: { message: errorData.message || 'Failed to create user' } };
       }
 
+      const data = await response.json();
       console.log('User created successfully:', data);
       return { data, error: null };
     } catch (error) {
-      console.error('Error calling create-user function:', error);
+      console.error('Error creating user:', error);
       return { data: null, error: { message: error.message } };
     }
   },
 
   adminDeleteUser: async (userId) => {
-    const { error } = await supabase.rpc('admin_delete_user', {
-      target_user_id: userId
-    });
-    return { error };
+    try {
+      const response = await fetch(`http://localhost:5000/api/mongodb/users/${userId}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        return { error: { message: errorData.message || 'Failed to delete user' } };
+      }
+
+      return { error: null };
+    } catch (error) {
+      return { error: { message: error.message } };
+    }
   },
 };
 
