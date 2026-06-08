@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
-import { slotService } from '../services/supabaseService';
+import { slotService } from '../services/mongodbService';
 
 function SlotModal({ slot, onClose, onSave }) {
   const [form, setForm] = useState(slot || { label: '', start_time: '08:00', end_time: '10:00', days: 'Mon–Fri', rooms: 'All', active: true });

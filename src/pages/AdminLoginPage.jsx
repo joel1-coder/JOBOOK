@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { profileService } from '../services/supabaseService';
-import { authService } from '../services/supabaseService';
+import { profileService } from '../services/mongodbService';
+import { authService } from '../services/mongodbService';
 
 export default function AdminLoginPage() {
   const { login, logout } = useAuth();

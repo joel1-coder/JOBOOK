@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
-import { rulesService } from '../services/supabaseService';
+import { rulesService } from '../services/mongodbService';
 
 export default function BookingRules() {
   const [rules, setRules] = useState(null);

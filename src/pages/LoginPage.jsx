@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
-import { authService, profileService } from '../services/supabaseService';
+import { authService, profileService } from '../services/mongodbService';
 
 export default function LoginPage() {
   const { login, signup, logout } = useAuth();

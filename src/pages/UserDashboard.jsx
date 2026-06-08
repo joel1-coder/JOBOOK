@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationDropdown from '../components/NotificationDropdown';
 import { useAuth } from '../context/AuthContext';
-import { supabase } from '../lib/supabase';
+import { mongoClient } from '../lib/mongodb';
 
 export default function UserDashboard() {
   const { user, profile } = useAuth();
@@ -17,7 +17,7 @@ export default function UserDashboard() {
   useEffect(() => {
     const loadRooms = async () => {
       setLoadingRooms(true);
-      const { data, error } = await supabase.from('rooms').select('*').order('name');
+      const { data, error } = await mongoClient.from('rooms').select('*').order('name');
       if (error) setRoomError(error.message);
       else setRooms(data || []);
       setLoadingRooms(false);
@@ -25,7 +25,7 @@ export default function UserDashboard() {
 
     const loadBookings = async () => {
       if (!user?.id) return;
-      const { data } = await supabase
+      const { data } = await mongoClient
         .from('bookings')
         .select('*, rooms(name, emoji, image_url), time_slots(label, start_time, end_time)')
         .eq('user_id', user.id)

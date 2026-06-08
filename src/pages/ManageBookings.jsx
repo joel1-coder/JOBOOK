@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { FileSpreadsheet, Trash2 } from 'lucide-react';
 import * as XLSX from 'xlsx';
 import Sidebar from '../components/Sidebar';
-import { bookingService } from '../services/supabaseService';
+import { bookingService } from '../services/mongodbService';
 
 export default function ManageBookings() {
   const [bookings, setBookings] = useState([]);

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSearchParams } from 'react-router-dom';
 import { useTheme } from '../context/ThemeContext';
-import { authService } from '../services/supabaseService';
+import { authService } from '../services/mongodbService';
 
 export default function ResetPasswordPage() {
   const navigate = useNavigate();

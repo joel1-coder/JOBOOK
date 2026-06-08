@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
-import { profileService } from '../services/supabaseService';
+import { profileService } from '../services/mongodbService';
 
 export default function UserProfile() {
   const { user, profile, loadProfile } = useAuth();
@@ -122,7 +122,7 @@ export default function UserProfile() {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 0', borderBottom: '1px solid var(--clr-border)' }}>
                   <div>
                     <div style={{ fontSize: 13, fontWeight: 600 }}>Password</div>
-                    <div style={{ fontSize: 12, color: 'var(--clr-text-muted)' }}>Managed via Supabase Auth</div>
+                    <div style={{ fontSize: 12, color: 'var(--clr-text-muted)' }}>Managed via mongoClient Auth</div>
                   </div>
                   <button className="btn btn-outline btn-sm">Change</button>
                 </div>

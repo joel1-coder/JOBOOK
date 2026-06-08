@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { supabase } from '../lib/supabase';
+import { mongoClient } from '../lib/mongodb';
 import { useAuth } from '../context/AuthContext';
 import Sidebar from '../components/Sidebar';
 
@@ -101,14 +101,14 @@ export default function SchedulePage() {
 
   // Load rooms and admin-configured slots on mount
   useEffect(() => {
-    supabase.from('rooms').select('*').eq('available', true).order('name').then(({ data }) => {
+    mongoClient.from('rooms').select('*').eq('available', true).order('name').then(({ data }) => {
       setRooms(data || []);
       if (data?.length) {
         const preselected = roomId ? data.find(r => r.id === roomId) : null;
         setSelectedRoom(preselected || data[0]); // auto-select first or matching room
       }
     });
-    supabase.from('time_slots').select('*').eq('active', true).order('start_time').then(({ data }) => {
+    mongoClient.from('time_slots').select('*').eq('active', true).order('start_time').then(({ data }) => {
       setSlots(data || []);
     });
   }, []);
@@ -117,7 +117,7 @@ export default function SchedulePage() {
   useEffect(() => {
     if (!selectedRoom || !selectedDate) return;
     setSelectedSlot(null);
-    supabase.from('bookings')
+    mongoClient.from('bookings')
       .select('slot_id')
       .eq('room_id', selectedRoom.id)
       .eq('date', selectedDate)
@@ -133,7 +133,7 @@ export default function SchedulePage() {
   const handleConfirm = async () => {
     if (!selectedDate || !selectedSlot || !selectedRoom || !user) return;
     setBooking(true);
-    const { error } = await supabase.from('bookings').insert({
+    const { error } = await mongoClient.from('bookings').insert({
       user_id: user.id, room_id: selectedRoom.id,
       slot_id: selectedSlot.id, date: selectedDate, status: 'pending',
     });

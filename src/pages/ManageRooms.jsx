@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
-import { roomService } from '../services/supabaseService';
+import { roomService } from '../services/mongodbService';
 
 export default function ManageRooms() {
   const [rooms, setRooms] = useState([]);

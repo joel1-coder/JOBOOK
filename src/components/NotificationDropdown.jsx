@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
 import { Bell, CheckCircle2, CircleAlert, Clock3 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
-import { notificationService } from '../services/supabaseService';
+import { notificationService } from '../services/mongodbService';
 
 export default function NotificationDropdown() {
   const { user } = useAuth();

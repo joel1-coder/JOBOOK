@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { useAuth } from '../context/AuthContext';
-import { bookingService } from '../services/supabaseService';
+import { bookingService } from '../services/mongodbService';
 
 export default function MyBookings() {
   const { user } = useAuth();

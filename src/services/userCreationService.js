@@ -1,7 +1,7 @@
-import { authService } from './supabaseService';
+import { authService } from './mongodbService';
 
 export const userCreationService = {
-  // Create user using MongoDB API via supabaseService
+  // Create user using MongoDB API via MongoDBService
   createUser: async (email, password, fullName, department, staffId) => {
     try {
       // Use authService.adminCreateUser which now uses MongoDB API

@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trash2 } from 'lucide-react';
 import Sidebar from '../components/Sidebar';
-import { profileService } from '../services/supabaseService';
+import { profileService } from '../services/mongodbService';
 
 export default function UserManagement() {
   const [users, setUsers] = useState([]);

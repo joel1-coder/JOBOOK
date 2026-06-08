@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { mongoClient } from '../lib/mongodb';
 
 export const AuthContext = createContext(null);
 
@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   const loadProfile = async (userId) => {
     try {
-      const { data } = await supabase
+      const { data } = await mongoClient
         .from('profiles')
         .select('*')
         .eq('id', userId)
@@ -21,7 +21,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     // Check existing session on mount
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    mongoClient.auth.getSession().then(({ data: { session } }) => {
       if (session?.user) {
         setUser(session.user);
         loadProfile(session.user.id);
@@ -30,7 +30,7 @@ export function AuthProvider({ children }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+    const { data: { subscription } } = mongoClient.auth.onAuthStateChange((_event, session) => {
       if (session?.user) {
         setUser(session.user);
         loadProfile(session.user.id);
@@ -44,13 +44,13 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = (email, password) =>
-    supabase.auth.signInWithPassword({ email, password });
+    mongoClient.auth.signInWithPassword({ email, password });
 
   const signup = (email, password, fullName) =>
-    supabase.auth.signUp({ email, password, options: { data: { full_name: fullName } } });
+    mongoClient.auth.signUp({ email, password, options: { data: { full_name: fullName } } });
 
   const logout = async () => {
-    await supabase.auth.signOut();
+    await mongoClient.auth.signOut();
     setUser(null);
     setProfile(null);
   };

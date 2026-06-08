@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import NotificationDropdown from '../components/NotificationDropdown';
 import { useAuth } from '../context/AuthContext';
-import { bookingService } from '../services/supabaseService';
+import { bookingService } from '../services/mongodbService';
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
   CartesianGrid, AreaChart, Area,
