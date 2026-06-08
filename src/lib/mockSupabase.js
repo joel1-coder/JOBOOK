@@ -365,7 +365,23 @@ class MockQueryBuilder {
       }
 
       setStorageData(this.tableName, data);
-      data = this.isSingle || !isArray ? insertedItems[0] : insertedItems;
+      
+      // Resolve joins for inserted records
+      const resolvedItems = insertedItems.map(item => {
+        const resolved = { ...item };
+        if (this.tableName === 'bookings') {
+          const rooms = getStorageData('rooms');
+          const profiles = getStorageData('profiles');
+          const slots = getStorageData('time_slots');
+
+          resolved.rooms = rooms.find(r => r.id === item.room_id) || null;
+          resolved.profiles = profiles.find(p => p.id === item.user_id) || null;
+          resolved.time_slots = slots.find(s => s.id === item.slot_id) || null;
+        }
+        return resolved;
+      });
+      
+      data = this.isSingle || !isArray ? resolvedItems[0] : resolvedItems;
     } else if (this.operation === 'update') {
       let affectedRows = [];
       const updatedData = data.map(item => {
@@ -390,6 +406,21 @@ class MockQueryBuilder {
       });
 
       setStorageData(this.tableName, updatedData);
+
+      // Resolve joins for updated records
+      affectedRows = affectedRows.map(item => {
+        const resolved = { ...item };
+        if (this.tableName === 'bookings') {
+          const rooms = getStorageData('rooms');
+          const profiles = getStorageData('profiles');
+          const slots = getStorageData('time_slots');
+
+          resolved.rooms = rooms.find(r => r.id === item.room_id) || null;
+          resolved.profiles = profiles.find(p => p.id === item.user_id) || null;
+          resolved.time_slots = slots.find(s => s.id === item.slot_id) || null;
+        }
+        return resolved;
+      });
 
       // Trigger automatic booking notifications on status updates
       if (this.tableName === 'bookings' && this.payload.status) {
