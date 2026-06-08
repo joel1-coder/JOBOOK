@@ -12,26 +12,35 @@ export default function ManageBookings() {
   const [updating, setUpdating] = useState(null);
   const [error, setError] = useState('');
 
+  const loadBookings = async () => {
+    setLoading(true);
+    const { data, error: loadError } = await bookingService.getAllBookings();
+    if (loadError) setError('Could not load bookings: ' + loadError.message);
+    setBookings(data || []);
+    setLoading(false);
+  };
+
   useEffect(() => {
-    bookingService.getAllBookings().then(({ data, error: loadError }) => {
-      if (loadError) setError('Could not load bookings: ' + loadError.message);
-      setBookings(data || []);
-      setLoading(false);
-    });
+    loadBookings();
   }, []);
 
   const updateStatus = async (id, status) => {
     setUpdating(id);
     setError('');
     const { error: err } = await bookingService.updateBookingStatus(id, status);
-    setUpdating(null);
     
     if (err) {
       setError('Failed to update booking: ' + err.message);
+      setUpdating(null);
       return;
     }
     
+    // Update local state immediately for UI feedback
     setBookings(prev => prev.map(b => b.id === id ? { ...b, status } : b));
+    
+    // Reload all bookings to ensure persistence and accuracy
+    await loadBookings();
+    setUpdating(null);
   };
 
   const deleteBooking = async (booking) => {

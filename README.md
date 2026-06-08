@@ -13,14 +13,27 @@ The React Compiler is not enabled on this template because of its impact on dev 
 
 ## Environment setup
 
-Copy `.env.example` to `.env` and set your Supabase credentials before running the app:
+Copy `.env.example` to `.env` and set your MongoDB Atlas credentials before running the app:
 
 ```env
-VITE_SUPABASE_URL=https://your-project-ref.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/jobook?retryWrites=true&w=majority
+VITE_MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/jobook?retryWrites=true&w=majority
+MONGODB_DB=jobook
+VITE_MONGODB_DB=jobook
+VITE_DATABASE_MODE=mongodb
 ```
 
-If the project URL is invalid, the browser will fail with `net::ERR_NAME_NOT_RESOLVED` when Supabase auth tries to call `/auth/v1/token`.
+## Running the app
+
+Start both the frontend and MongoDB API server:
+
+```bash
+npm run dev:all
+```
+
+Or run them separately:
+- Frontend: `npm run dev` (runs on http://localhost:5174)
+- API Server: `npm run dev:mongo` (runs on http://localhost:5000)
 
 ## Expanding the ESLint configuration
 
