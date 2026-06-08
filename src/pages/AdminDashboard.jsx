@@ -248,8 +248,8 @@ export default function AdminDashboard() {
                   </span>
                 </div>
               </div>
-              <div style={{ width: '100%', height: 230 }}>
-                <ResponsiveContainer width="100%" height="100%">
+              <div style={{ width: '100%', height: 230, minHeight: 230 }}>
+                <ResponsiveContainer width="100%" height={230}>
                   <BarChart data={chartData.length ? chartData : [{ name: 'No data', confirmed: 0, pending: 0 }]} barSize={22} barGap={4}>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--clr-border)" vertical={false} />
                     <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#94A3B8' }} axisLine={false} tickLine={false} />
