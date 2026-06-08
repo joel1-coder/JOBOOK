@@ -1,7 +1,7 @@
 # JOBOOK MongoDB Setup Guide
 
 ## Overview
-This application has been transitioned from Supabase (SQL) to **MongoDB Atlas (NoSQL)**.
+This application uses **MongoDB Atlas (NoSQL)** for its database backend.
 
 ## Architecture
 ```
@@ -73,16 +73,10 @@ MongoDB automatically creates these collections:
 - `rooms` - Room booking resources
 - `bookings` - Booking records
 - `time_slots` - Available time slots
-- `profiles` - User profiles
-- `booking_rules` - Booking policies
 
 ## Authentication
 
-Authentication is still handled by **Supabase Auth** for the login system.
-Data operations use **MongoDB**.
-
-This hybrid approach gives you:
-- ✅ Managed authentication (Supabase)
+- ✅ Managed authentication (MongoDB / Local Auth)
 - ✅ NoSQL flexibility (MongoDB)
 - ✅ No backend server setup complexity (REST API)
 
