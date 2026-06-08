@@ -25,6 +25,10 @@ let db = null;
 let useMockData = false;
 let mockDb = {};
 
+function mongoIdFilter(id) {
+  return ObjectId.isValid(id) ? { _id: new ObjectId(id) } : { id };
+}
+
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -234,13 +238,11 @@ app.get('/api/mongodb/:collection/:id', async (req, res) => {
     const { collection, id } = req.params;
 
     if (useMockData) {
-      const data = getCollection(collection).find(doc => doc._id === id);
+      const data = getCollection(collection).find(doc => doc._id === id || doc.id === id);
       return res.json({ data, error: null });
     }
 
-    const doc = await db.collection(collection).findOne({
-      _id: new ObjectId(id)
-    });
+    const doc = await db.collection(collection).findOne(mongoIdFilter(id));
     res.json({ data: doc, error: null });
   } catch (error) {
     res.status(500).json({ data: null, error: error.message });
@@ -281,7 +283,7 @@ app.patch('/api/mongodb/:collection/:id', async (req, res) => {
 
     if (useMockData) {
       const coll = getCollection(collection);
-      const index = coll.findIndex(doc => doc._id === id);
+      const index = coll.findIndex(doc => doc._id === id || doc.id === id);
       if (index === -1) {
         return res.status(404).json({ data: null, error: 'Document not found' });
       }
@@ -292,12 +294,12 @@ app.patch('/api/mongodb/:collection/:id', async (req, res) => {
     }
 
     const result = await db.collection(collection).findOneAndUpdate(
-      { _id: new ObjectId(id) },
+      mongoIdFilter(id),
       { $set: updates },
       { returnDocument: 'after' }
     );
 
-    res.json({ data: result.value, error: null });
+    res.json({ data: result?.value ?? result, error: null });
   } catch (error) {
     res.status(500).json({ data: null, error: error.message });
   }
@@ -310,7 +312,7 @@ app.delete('/api/mongodb/:collection/:id', async (req, res) => {
 
     if (useMockData) {
       const coll = getCollection(collection);
-      const index = coll.findIndex(doc => doc._id === id);
+      const index = coll.findIndex(doc => doc._id === id || doc.id === id);
       if (index === -1) {
         return res.status(404).json({ data: null, error: 'Document not found' });
       }
@@ -319,9 +321,7 @@ app.delete('/api/mongodb/:collection/:id', async (req, res) => {
       return res.json({ data: null, error: null });
     }
 
-    await db.collection(collection).deleteOne({
-      _id: new ObjectId(id)
-    });
+    await db.collection(collection).deleteOne(mongoIdFilter(id));
 
     res.json({ data: null, error: null });
   } catch (error) {
