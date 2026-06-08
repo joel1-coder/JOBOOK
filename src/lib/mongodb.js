@@ -6,6 +6,37 @@
 
 const MONGODB_URI = import.meta.env.VITE_MONGODB_URI;
 const DB_NAME = import.meta.env.VITE_MONGODB_DB || 'jobook';
+let db = null;
+
+// Initialize default users in localStorage for authentication
+function initializeDefaultUsers() {
+  if (typeof window === 'undefined') return;
+  
+  const existingUsers = localStorage.getItem('jobook_users');
+  if (existingUsers) return; // Users already initialized
+  
+  const defaultUsers = [
+    {
+      id: 'admin-uuid-1111-2222',
+      email: 'admin@jobook.com',
+      password: '123456',
+      full_name: 'System Admin',
+      role: 'admin',
+      user_metadata: { role: 'admin' }
+    },
+    {
+      id: 'user-uuid-3333-4444',
+      email: 'user@jobook.com',
+      password: '123456',
+      full_name: 'John Doe',
+      role: 'user',
+      user_metadata: { role: 'user' }
+    }
+  ];
+  
+  localStorage.setItem('jobook_users', JSON.stringify(defaultUsers));
+  console.log('✅ Default users initialized in localStorage');
+}
 
 // Initialize MongoDB connection
 async function initializeConnection() {
@@ -297,5 +328,8 @@ export const mongoClient = {
     }
   }
 };
+
+// Initialize default users when module loads
+initializeDefaultUsers();
 
 export default mongoClient;
