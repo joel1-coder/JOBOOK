@@ -1,6 +1,6 @@
 /**
  * MongoDB client for JOBOOK.
- * Exposes the small Supabase-like surface the app uses while delegating
+ * Exposes the small database surface the app uses while delegating
  * browser data access to the local MongoDB REST API.
  */
 
