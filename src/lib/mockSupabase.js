@@ -263,6 +263,11 @@ class MockQueryBuilder {
     return this;
   }
 
+  in(column, values) {
+    this.filters.push({ column, values, type: 'in' });
+    return this;
+  }
+
   single() {
     this.isSingle = true;
     return this;
@@ -285,7 +290,11 @@ class MockQueryBuilder {
     if (this.operation === 'select') {
       // Apply filters
       for (const filter of this.filters) {
-        data = data.filter(item => item[filter.column] === filter.value);
+        if (filter.type === 'eq') {
+          data = data.filter(item => item[filter.column] === filter.value);
+        } else if (filter.type === 'in') {
+          data = data.filter(item => filter.values.includes(item[filter.column]));
+        }
       }
 
       // Apply order
