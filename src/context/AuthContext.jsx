@@ -43,11 +43,27 @@ export function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
-  const login = (email, password) =>
-    mongoClient.auth.signInWithPassword({ email, password });
+  const login = async (email, password) => {
+    const res = await mongoClient.auth.signInWithPassword({ email, password });
+    if (res.data?.session?.user) {
+      setUser(res.data.session.user);
+      await loadProfile(res.data.session.user.id);
+    }
+    return res;
+  };
 
-  const signup = (email, password, fullName) =>
-    mongoClient.auth.signUp({ email, password, options: { data: { full_name: fullName } } });
+  const signup = async (email, password, fullName) => {
+    const res = await mongoClient.auth.signUp({ email, password, options: { data: { full_name: fullName } } });
+    if (res.data?.user) {
+      // Some signup flows Auto-login, some don't. We'll leave state alone if it requires email confirmation.
+      // But if it auto-logs in:
+      if (res.data.session) {
+        setUser(res.data.session.user);
+        await loadProfile(res.data.session.user.id);
+      }
+    }
+    return res;
+  };
 
   const logout = async () => {
     await mongoClient.auth.signOut();
