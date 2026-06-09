@@ -189,6 +189,36 @@ async function initializeCollections() {
       await db.collection('profiles').insertMany(defaultUsers);
       console.log('✅ Seeded default admin and user profiles into MongoDB');
     }
+
+    // Seed default time slots if empty
+    const slotsCount = await db.collection('time_slots').countDocuments();
+    if (slotsCount === 0) {
+      const createdAt = new Date().toISOString();
+      const defaultSlots = [
+        { id: 'slot-0900-1000', label: '9:00 AM – 10:00 AM', start_time: '09:00', end_time: '10:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1000-1100', label: '10:00 AM – 11:00 AM', start_time: '10:00', end_time: '11:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1100-1200', label: '11:00 AM – 12:00 PM', start_time: '11:00', end_time: '12:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1200-1300', label: '12:00 PM – 1:00 PM',  start_time: '12:00', end_time: '13:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1300-1400', label: '1:00 PM – 2:00 PM',   start_time: '13:00', end_time: '14:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1400-1500', label: '2:00 PM – 3:00 PM',   start_time: '14:00', end_time: '15:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1500-1600', label: '3:00 PM – 4:00 PM',   start_time: '15:00', end_time: '16:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1600-1700', label: '4:00 PM – 5:00 PM',   start_time: '16:00', end_time: '17:00', available: true, created_at: createdAt, updated_at: createdAt },
+      ];
+      await db.collection('time_slots').insertMany(defaultSlots);
+      console.log('✅ Seeded 8 default time slots into MongoDB');
+    }
+
+    // Seed default rooms if empty
+    const roomsCount = await db.collection('rooms').countDocuments();
+    if (roomsCount === 0) {
+      const createdAt = new Date().toISOString();
+      const defaultRooms = [
+        { id: 'room-video-editing', name: 'VIDEO EDITING ROOM', capacity: 10, floor: 'MCA BLOCK', building: 'MCA BLOCK', type: 'Video Editing', emoji: '🎬', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'room-server',        name: 'SERVER ROOM',        capacity: 5,  floor: 'IT BLOCK',  building: 'IT BLOCK',  type: 'Server',       emoji: '🖥️', available: true, created_at: createdAt, updated_at: createdAt },
+      ];
+      await db.collection('rooms').insertMany(defaultRooms);
+      console.log('✅ Seeded default rooms into MongoDB');
+    }
   } catch (error) {
     console.error('⚠️  Error initializing collections:', error.message);
   }
