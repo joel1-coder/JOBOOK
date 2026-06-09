@@ -155,6 +155,40 @@ async function initializeCollections() {
         console.log(`✅ Created ${collName} collection`);
       }
     }
+
+    // Seed default profiles if empty
+    const profilesCount = await db.collection('profiles').countDocuments();
+    if (profilesCount === 0) {
+      const createdAt = new Date().toISOString();
+      const defaultUsers = [
+        {
+          id: 'admin-uuid-1111-2222',
+          email: 'admin@jobook.com',
+          password: '123456',
+          full_name: 'System Admin',
+          role: 'admin',
+          department: 'Administration',
+          staff_id: 'ADMIN001',
+          status: 'active',
+          created_at: createdAt,
+          updated_at: createdAt
+        },
+        {
+          id: 'user-uuid-3333-4444',
+          email: 'user@jobook.com',
+          password: '123456',
+          full_name: 'John Doe',
+          role: 'user',
+          department: 'General',
+          staff_id: 'USER001',
+          status: 'active',
+          created_at: createdAt,
+          updated_at: createdAt
+        }
+      ];
+      await db.collection('profiles').insertMany(defaultUsers);
+      console.log('✅ Seeded default admin and user profiles into MongoDB');
+    }
   } catch (error) {
     console.error('⚠️  Error initializing collections:', error.message);
   }
