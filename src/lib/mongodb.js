@@ -4,7 +4,7 @@
  * browser data access to the local MongoDB REST API.
  */
 
-const API_BASE = import.meta.env.VITE_MONGODB_API_BASE || 'http://localhost:5000/api/mongodb';
+const API_BASE = import.meta.env.VITE_MONGODB_API_BASE || 'https://jobook.onrender.com/api/mongodb';
 
 function nowIso() {
   return new Date().toISOString();
