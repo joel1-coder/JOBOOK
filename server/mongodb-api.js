@@ -195,18 +195,25 @@ async function initializeCollections() {
     if (slotsCount === 0) {
       const createdAt = new Date().toISOString();
       const defaultSlots = [
-        { id: 'slot-0900-1000', label: '9:00 AM – 10:00 AM', start_time: '09:00', end_time: '10:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1000-1100', label: '10:00 AM – 11:00 AM', start_time: '10:00', end_time: '11:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1100-1200', label: '11:00 AM – 12:00 PM', start_time: '11:00', end_time: '12:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1200-1300', label: '12:00 PM – 1:00 PM',  start_time: '12:00', end_time: '13:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1300-1400', label: '1:00 PM – 2:00 PM',   start_time: '13:00', end_time: '14:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1400-1500', label: '2:00 PM – 3:00 PM',   start_time: '14:00', end_time: '15:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1500-1600', label: '3:00 PM – 4:00 PM',   start_time: '15:00', end_time: '16:00', available: true, created_at: createdAt, updated_at: createdAt },
-        { id: 'slot-1600-1700', label: '4:00 PM – 5:00 PM',   start_time: '16:00', end_time: '17:00', available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-0900-1000', label: '9:00 AM – 10:00 AM', start_time: '09:00', end_time: '10:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1000-1100', label: '10:00 AM – 11:00 AM', start_time: '10:00', end_time: '11:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1100-1200', label: '11:00 AM – 12:00 PM', start_time: '11:00', end_time: '12:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1200-1300', label: '12:00 PM – 1:00 PM',  start_time: '12:00', end_time: '13:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1300-1400', label: '1:00 PM – 2:00 PM',   start_time: '13:00', end_time: '14:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1400-1500', label: '2:00 PM – 3:00 PM',   start_time: '14:00', end_time: '15:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1500-1600', label: '3:00 PM – 4:00 PM',   start_time: '15:00', end_time: '16:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
+        { id: 'slot-1600-1700', label: '4:00 PM – 5:00 PM',   start_time: '16:00', end_time: '17:00', active: true, available: true, created_at: createdAt, updated_at: createdAt },
       ];
       await db.collection('time_slots').insertMany(defaultSlots);
       console.log('✅ Seeded 8 default time slots into MongoDB');
     }
+
+    // Migration: set active:true on any existing slots missing the field
+    await db.collection('time_slots').updateMany(
+      { active: { $exists: false } },
+      { $set: { active: true } }
+    );
+    console.log('✅ Migrated existing time slots to active:true');
 
     // Seed default rooms if empty
     const roomsCount = await db.collection('rooms').countDocuments();

@@ -108,8 +108,9 @@ export default function SchedulePage() {
         setSelectedRoom(preselected || data[0]); // auto-select first or matching room
       }
     });
-    mongoClient.from('time_slots').select('*').eq('active', true).order('start_time').then(({ data }) => {
-      setSlots(data || []);
+    mongoClient.from('time_slots').select('*').order('start_time').then(({ data }) => {
+      // Treat slots with active:true OR active:undefined as active (backward compat)
+      setSlots((data || []).filter(s => s.active !== false));
     });
   }, []);
 
