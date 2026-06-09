@@ -1,5 +1,7 @@
 import { mongoClient } from '../lib/mongodb';
 
+const API_BASE = import.meta.env.VITE_MONGODB_API_BASE || 'https://jobook.onrender.com/api/mongodb';
+
 // ─── Auth ────────────────────────────────────────────────────
 export const authService = {
   signUp: async (email, password, fullName) => {
@@ -94,7 +96,7 @@ export const profileService = {
   adminCreateUser: async (email, password, fullName, department, staffId) => {
     try {
       // Use MongoDB API to create user
-      const response = await fetch('http://localhost:5000/api/mongodb/users', {
+      const response = await fetch(`${API_BASE}/users`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -127,7 +129,7 @@ export const profileService = {
 
   adminDeleteUser: async (userId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/mongodb/users/${userId}`, {
+      const response = await fetch(`${API_BASE}/users/${userId}`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
