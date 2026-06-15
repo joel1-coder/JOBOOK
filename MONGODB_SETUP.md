@@ -34,8 +34,8 @@ npm install
 ### 2. Update `.env` File
 Your `.env` file has been pre-configured with:
 ```env
-VITE_MONGODB_URI=mongodb+srv://kjindus70_db_user:uALKglfkapiXXYeW@jobook.fomlauf.mongodb.net/jobook?retryWrites=true&w=majority
-VITE_MONGODB_DB=jobook
+VITE_MONGODB_URI=mongodb+srv://kjindus70_db_user:uALKglfkapiXXYeW@venue-booking.fomlauf.mongodb.net/venue-booking-system?retryWrites=true&w=majority
+VITE_MONGODB_DB=venue-booking-system
 VITE_DATABASE_MODE=mongodb
 ```
 

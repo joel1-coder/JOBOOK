@@ -16,10 +16,10 @@ The React Compiler is not enabled on this template because of its impact on dev 
 Copy `.env.example` to `.env` and set your MongoDB Atlas credentials before running the app:
 
 ```env
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/jobook?retryWrites=true&w=majority
-VITE_MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/jobook?retryWrites=true&w=majority
-MONGODB_DB=jobook
-VITE_MONGODB_DB=jobook
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/venue-booking-system?retryWrites=true&w=majority
+VITE_MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/venue-booking-system?retryWrites=true&w=majority
+MONGODB_DB=venue-booking-system
+VITE_MONGODB_DB=venue-booking-system
 VITE_DATABASE_MODE=mongodb
 ```
 
