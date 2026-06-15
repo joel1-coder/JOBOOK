@@ -1,4 +1,4 @@
-# JOBOOK MongoDB Setup Guide
+# Venue Booking System MongoDB Setup Guide
 
 ## Overview
 This application uses **MongoDB Atlas (NoSQL)** for its database backend.
