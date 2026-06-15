@@ -1,5 +1,5 @@
 /**
- * JOBOOK Hybrid MongoDB/Mock Backend Server
+ * Venue Booking System Hybrid MongoDB/Mock Backend Server
  * Handles MongoDB operations via REST API with fallback to in-memory storage
  */
 
@@ -412,7 +412,7 @@ app.get('/health', (req, res) => {
 // Start server
 connectDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`🚀 JOBOOK API server running on http://localhost:${PORT}`);
+    console.log(`🚀 Venue Booking System API server running on http://localhost:${PORT}`);
     console.log(`📊 Database Mode: ${useMockData ? 'MOCK (in-memory)' : 'MONGODB (Atlas)'}`);
     console.log(`🏥 Health Check: http://localhost:${PORT}/health`);
   });

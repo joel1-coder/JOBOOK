@@ -13,8 +13,12 @@ export default function UserDashboard() {
   const [loadingRooms, setLoadingRooms] = useState(true);
   const [roomError, setRoomError] = useState('');
   const [toast, setToast] = useState('');
+  const [greeting, setGreeting] = useState('');
 
   useEffect(() => {
+    const h = new Date().getHours();
+    setGreeting(h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening');
+    
     const loadRooms = async () => {
       setLoadingRooms(true);
       const { data, error } = await mongoClient.from('rooms').select('*').order('name');
@@ -66,7 +70,7 @@ export default function UserDashboard() {
             <div style={{ position: 'absolute', right: 60, bottom: -30, width: 100, height: 100, borderRadius: '50%', background: 'rgba(255,255,255,.05)' }} />
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 12 }}>
               <img src="/favicon.jpg" alt="JOBOOK" style={{ width: 32, height: 32, objectFit: 'contain' }} />
-              <span style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.08em', opacity: .8 }}>JOBOOK</span>
+              <span style={{ fontSize: 12, fontWeight: 600, textTransform: 'uppercase', letterSpacing: '.08em', opacity: .8 }}>{greeting}</span>
             </div>
             <h2 style={{ fontSize: 26, fontWeight: 800, marginBottom: 6, position: 'relative' }}>
               Welcome, {profile?.full_name?.split(' ')[0] || 'User'}!

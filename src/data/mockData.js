@@ -1,4 +1,4 @@
-// Mock data store for JOBOOK
+// Mock data store for Venue Booking System
 export const mockRooms = [
   { id: 1, name: 'VIDEO EDITING ROOM', capacity: 10, floor: 'MCA BLOCK', building: 'MCA BLOCK', type: 'Video Editing', available: true, emoji: '🎬', desc: 'Professional video editing room. Location: MCA BLOCK, near Staff Room' },
 ];

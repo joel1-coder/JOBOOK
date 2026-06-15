@@ -1,5 +1,5 @@
 /**
- * MongoDB client for JOBOOK.
+ * MongoDB client for Venue Booking System.
  * Exposes the small database surface the app uses while delegating
  * browser data access to the local MongoDB REST API.
  */

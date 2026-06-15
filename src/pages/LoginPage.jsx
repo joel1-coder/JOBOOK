@@ -104,8 +104,8 @@ export default function LoginPage() {
       </button>
       <div className="auth-card">
         <div className="auth-brand">
-          <img src="/favicon.jpg" alt="JOBOOK" className="auth-brand-icon" style={{ width: 40, height: 40, objectFit: 'contain' }} />
-          <span className="auth-brand-name">JOBOOK</span>
+          <img src="/favicon.jpg" alt="Venue Booking System" className="auth-brand-icon" style={{ width: 40, height: 40, objectFit: 'contain' }} />
+          <span className="auth-brand-name">Venue Booking System</span>
         </div>
 
         <h1 className="auth-title">{isSignup ? 'Create account' : 'Welcome back'}</h1>
@@ -159,7 +159,7 @@ export default function LoginPage() {
         </p>
 
         <div style={{ marginTop: 20, padding: 14, background: '#F8FAFC', borderRadius: 10, border: '1px solid #E2E8F0', textAlign: 'center' }}>
-          <p style={{ fontSize: 11, color: '#64748B' }}><strong>JOBOOK</strong> — Spatial Room Booking System</p>
+          <p style={{ fontSize: 11, color: '#64748B' }}><strong>Venue Booking System</strong> — Room Booking Solution</p>
         </div>
       </div>
 

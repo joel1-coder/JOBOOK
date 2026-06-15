@@ -63,8 +63,8 @@ export default function Sidebar() {
       {/* Sidebar */}
       <aside className={`sidebar ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-brand">
-          <img src="/favicon.jpg" alt="JOBOOK" style={{ width: 32, height: 32, objectFit: 'contain' }} />
-          <span className="sidebar-brand-name">JOBOOK</span>
+          <img src="/favicon.jpg" alt="Venue Booking System" style={{ width: 32, height: 32, objectFit: 'contain' }} />
+          <span className="sidebar-brand-name">Venue Booking System</span>
         </div>
 
         <nav className="sidebar-nav">
