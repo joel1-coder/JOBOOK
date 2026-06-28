@@ -308,6 +308,15 @@ export const rulesService = {
     return { data, error };
   },
 
+  createRules: async (payload) => {
+    const { data, error } = await mongoClient
+      .from('booking_rules')
+      .insert({ ...payload, created_at: new Date().toISOString(), updated_at: new Date().toISOString() })
+      .select()
+      .single();
+    return { data, error };
+  },
+
   updateRules: async (id, updates) => {
     const { data, error } = await mongoClient
       .from('booking_rules')

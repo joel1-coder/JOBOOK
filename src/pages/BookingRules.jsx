@@ -2,16 +2,64 @@ import { useState, useEffect } from 'react';
 import Sidebar from '../components/Sidebar';
 import { rulesService } from '../services/mongodbService';
 
+const defaultRules = {
+  max_bookings_per_day: 2,
+  max_bookings_per_week: 5,
+  max_duration_hours: 4,
+  max_capacity_percent: 100,
+  min_notice_mins: 30,
+  max_advance_days: 14,
+  auto_cancel: false,
+  auto_cancel_mins: 15,
+  allow_weekends: true,
+  require_approval: false,
+  allow_guest_booking: false,
+};
+
 export default function BookingRules() {
   const [rules, setRules] = useState(null);
   const [rulesId, setRulesId] = useState(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    rulesService.getRules().then(({ data }) => {
-      if (data) { setRulesId(data.id); setRules(data); }
-    });
+    const loadRules = async () => {
+      setLoading(true);
+      setError('');
+
+      try {
+        const { data, error: fetchError } = await rulesService.getRules();
+        if (fetchError) {
+          console.error('Failed to load booking rules:', fetchError);
+          setError('Unable to load booking rules. Please try again later.');
+          return;
+        }
+
+        if (!data) {
+          const { data: newRule, error: createError } = await rulesService.createRules(defaultRules);
+          if (createError) {
+            console.error('Failed to create default booking rules:', createError);
+            setError('Unable to initialize booking rules. Please contact support.');
+            return;
+          }
+          setRulesId(newRule.id);
+          setRules(newRule);
+          return;
+        }
+
+        setRulesId(data.id);
+        setRules(data);
+      } catch (err) {
+        console.error('Unexpected error loading booking rules:', err);
+        setError('Unexpected error loading booking rules. Refresh the page to try again.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadRules();
   }, []);
 
   const set = (key, val) => setRules(prev => ({ ...prev, [key]: val }));
@@ -50,11 +98,22 @@ export default function BookingRules() {
     </div>
   );
 
-  if (!rules) return (
+  if (loading) return (
     <div className="app-layout">
       <Sidebar />
       <div className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
         <p style={{ color: 'var(--clr-text-muted)' }}>Loading rules…</p>
+      </div>
+    </div>
+  );
+
+  if (error) return (
+    <div className="app-layout">
+      <Sidebar />
+      <div className="main-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', flexDirection: 'column', gap: 12 }}>
+        <div style={{ color: 'var(--clr-danger)', fontWeight: 600 }}>Error</div>
+        <p style={{ color: 'var(--clr-text-muted)', textAlign: 'center', maxWidth: 420 }}>{error}</p>
+        <button className="btn btn-primary" onClick={() => window.location.reload()}>Reload</button>
       </div>
     </div>
   );
