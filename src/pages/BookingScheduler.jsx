@@ -426,18 +426,17 @@ export default function SchedulePage() {
 
         {/* Sticky Confirm Bar */}
         {selectedSlot && selectedRoom && (
-          <div className="schedule-light-panel" style={{
+          <div className="schedule-light-panel confirm-bar" style={{
             position: 'sticky', bottom: 0, background: '#fff',
-            borderTop: '1px solid #E2E8F0', padding: '16px 28px',
-            display: 'flex', alignItems: 'center', justifyContent: 'space-between',
+            borderTop: '1px solid #E2E8F0',
             boxShadow: '0 -4px 20px rgba(0,0,0,.08)', zIndex: 20,
             animation: 'fadeUp .2s ease',
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 20 }}>
-              <div style={{ width: 42, height: 42, background: '#EEF2FF', borderRadius: 10, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}></div>
+            <div className="confirm-info-section">
+              <div style={{ width: 42, height: 42, background: '#EEF2FF', borderRadius: 10, display: 'none', alignItems: 'center', justifyContent: 'center', fontSize: 20 }}></div>
               <div>
                 <div style={{ fontSize: 10, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 4 }}>Confirm Selection</div>
-                <div style={{ display: 'flex', gap: 28 }}>
+                <div className="confirm-details-row">
                   <div>
                     <div style={{ fontSize: 10, color: '#94A3B8' }}>Date</div>
                     <div style={{ fontSize: 14, fontWeight: 700 }}>{new Date(selectedDate + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}</div>
@@ -453,14 +452,14 @@ export default function SchedulePage() {
                 </div>
               </div>
             </div>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 12, flex: 1 }}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: 12, alignItems: 'center' }}>
+            <div className="confirm-action-section">
+              <div className="confirm-action-grid">
                 <div>
                   <div style={{ fontSize: 10, color: '#94A3B8', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '.06em', marginBottom: 4 }}>Attendees</div>
                   <input type="number" min="1" value={attendeeCount} onChange={e => setAttendeeCount(Math.max(1, Number(e.target.value) || 1))} style={{ width: 120, padding: '8px 10px', borderRadius: 8, border: '1px solid #E2E8F0', fontSize: 13 }} />
                   <div style={{ fontSize: 11, color: '#64748B', marginTop: 4 }}>Max allowed: {Math.max(1, Math.floor((selectedRoom.capacity || 1) * (Number(rules?.max_capacity_percent || 100) / 100)))}</div>
                 </div>
-                <div style={{ display: 'flex', gap: 12 }}>
+                <div className="confirm-btn-group">
                   <button className="btn btn-outline" onClick={() => setSelectedSlot(null)}>Cancel</button>
                   <button className="btn btn-primary" disabled={booking} onClick={handleConfirm}>
                     {booking ? '⏳ Booking…' : 'Confirm Booking'}
